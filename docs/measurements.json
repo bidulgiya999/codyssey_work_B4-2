@@ -1,0 +1,246 @@
+{
+  "oom_before": {
+    "folder": "oom-128-20261009-113259",
+    "worker_pid": "962",
+    "settings": {
+      "MEMORY_LIMIT": "128",
+      "CPU_MAX_OCCUPY": "100",
+      "MULTI_THREAD_ENABLE": "false"
+    },
+    "exit_code": 137,
+    "csv_samples": 16,
+    "first_rss_kib": 18356,
+    "observed_peak_rss_kib": 146376,
+    "last_elapsed_s": 17,
+    "cleanup": null,
+    "log_duration_s": 17.202
+  },
+  "oom_after": {
+    "folder": "oom-256-20261009-113740",
+    "worker_pid": "1156",
+    "settings": {
+      "MEMORY_LIMIT": "256",
+      "CPU_MAX_OCCUPY": "100",
+      "MULTI_THREAD_ENABLE": "false"
+    },
+    "exit_code": 137,
+    "csv_samples": 31,
+    "first_rss_kib": 18476,
+    "observed_peak_rss_kib": 274516,
+    "last_elapsed_s": 32,
+    "cleanup": null,
+    "log_duration_s": 32.363
+  },
+  "cpu_initial": {
+    "folder": "cpu-80-20261009-114729",
+    "worker_pid": "1530",
+    "settings": {
+      "MEMORY_LIMIT": "512",
+      "CPU_MAX_OCCUPY": "80",
+      "MULTI_THREAD_ENABLE": "false"
+    },
+    "exit_code": 143,
+    "csv_samples": 35,
+    "first_rss_kib": 18372,
+    "observed_peak_rss_kib": 18436,
+    "last_elapsed_s": 36,
+    "cleanup": null,
+    "top_samples_excluding_first": 29,
+    "observed_peak_cpu_pct": 4.0,
+    "peak_top_record": {
+      "frame": 23,
+      "cpu": 4.0,
+      "timestamp_header": "top - 11:47:53 up  1:05,  1 user,  load average: 0.00, 0.03, 0.05",
+      "system": "%Cpu(s):  0.1 us,  0.1 sy,  0.3 ni, 99.4 id,  0.0 wa,  0.0 hi,  0.1 si,  0.0 st ",
+      "row": "1530 jae0608   30  10   24404  18436  10088 S   4.0   0.2   0:00.19 agent-leak-app"
+    },
+    "log_duration_s": 36.389
+  },
+  "cpu_before": {
+    "folder": "cpu-80-pty-20261009-115744",
+    "worker_pid": "1921",
+    "settings": {
+      "MEMORY_LIMIT": "512",
+      "CPU_MAX_OCCUPY": "80",
+      "MULTI_THREAD_ENABLE": "false"
+    },
+    "exit_code": 143,
+    "csv_samples": 35,
+    "first_rss_kib": 18388,
+    "observed_peak_rss_kib": 18452,
+    "last_elapsed_s": 36,
+    "cleanup": null,
+    "top_samples_excluding_first": 341,
+    "observed_peak_cpu_pct": 50.0,
+    "peak_top_record": {
+      "frame": 249,
+      "cpu": 50.0,
+      "timestamp_header": "top - 11:58:11 up  1:15,  1 user,  load average: 0.00, 0.01, 0.01",
+      "system": "%Cpu(s):  0.0 us,  0.0 sy,  3.5 ni, 96.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st ",
+      "row": "1921 jae0608   30  10   24404  18452  10112 S  50.0   0.2   0:00.29 agent-leak-app"
+    },
+    "log_duration_s": 36.38
+  },
+  "cpu_after": {
+    "folder": "cpu-40-pty-20261009-122044",
+    "worker_pid": "2359",
+    "settings": {
+      "MEMORY_LIMIT": "512",
+      "CPU_MAX_OCCUPY": "40",
+      "MULTI_THREAD_ENABLE": "false"
+    },
+    "exit_code": 143,
+    "csv_samples": 677,
+    "first_rss_kib": 18400,
+    "observed_peak_rss_kib": 530628,
+    "last_elapsed_s": 684,
+    "cleanup": "2026-10-09T12:46:44+09:00 manual SIGTERM PID=2358\n2026-10-09T12:46:44+09:00 manual SIGTERM PID=2359",
+    "top_samples_excluding_first": 449,
+    "observed_peak_cpu_pct": 40.0,
+    "peak_top_record": {
+      "frame": 195,
+      "cpu": 40.0,
+      "timestamp_header": "top - 12:21:06 up  1:38,  1 user,  load average: 0.04, 0.04, 0.00",
+      "system": "%Cpu(s):  0.0 us,  0.0 sy,  2.1 ni, 97.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st ",
+      "row": "2359 jae0608   30  10  351096 197776  10124 S  40.0   2.5   0:00.35 agent-leak-app"
+    }
+  },
+  "dead_before": {
+    "folder": "deadlock-true-20261009-125943",
+    "worker_pid": "9226",
+    "settings": {
+      "MEMORY_LIMIT": "512",
+      "CPU_MAX_OCCUPY": "40",
+      "MULTI_THREAD_ENABLE": "true"
+    },
+    "exit_code": 143,
+    "csv_samples": 199,
+    "first_rss_kib": 18444,
+    "observed_peak_rss_kib": 18512,
+    "last_elapsed_s": 201,
+    "cleanup": "2026-10-09T13:03:05+09:00 manual SIGTERM PID=9225",
+    "snapshots": [
+      {
+        "timestamp": "2026-10-09T12:59:55+09:00",
+        "rss_kib": 18512,
+        "log_bytes": 2792,
+        "modified": "2026-10-09 12:59:52.286312863 +0900",
+        "threads": [
+          {
+            "tid": "9226",
+            "cpu": 0.3,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          },
+          {
+            "tid": "9297",
+            "cpu": 0.0,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          },
+          {
+            "tid": "9298",
+            "cpu": 0.0,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          }
+        ]
+      },
+      {
+        "timestamp": "2026-10-09T13:00:05+09:00",
+        "rss_kib": 18512,
+        "log_bytes": 2792,
+        "modified": "2026-10-09 12:59:52.286312863 +0900",
+        "threads": [
+          {
+            "tid": "9226",
+            "cpu": 0.1,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          },
+          {
+            "tid": "9297",
+            "cpu": 0.0,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          },
+          {
+            "tid": "9298",
+            "cpu": 0.0,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          }
+        ]
+      }
+    ]
+  },
+  "dead_after": {
+    "folder": "deadlock-false-20261009-130309",
+    "worker_pid": "11294",
+    "settings": {
+      "MEMORY_LIMIT": "512",
+      "CPU_MAX_OCCUPY": "40",
+      "MULTI_THREAD_ENABLE": "false"
+    },
+    "exit_code": 143,
+    "csv_samples": 301,
+    "first_rss_kib": 18432,
+    "observed_peak_rss_kib": 530664,
+    "last_elapsed_s": 304,
+    "cleanup": "2026-10-09T13:08:14+09:00 manual SIGTERM PID=11293\n2026-10-09T13:08:14+09:00 manual SIGTERM PID=11294",
+    "snapshots": [
+      {
+        "timestamp": "2026-10-09T13:03:21+09:00",
+        "rss_kib": 121000,
+        "log_bytes": 3474,
+        "modified": "2026-10-09 13:03:21.368107854 +0900",
+        "threads": [
+          {
+            "tid": "11294",
+            "cpu": 0.3,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          },
+          {
+            "tid": "11314",
+            "cpu": 0.6,
+            "state": "SNl+",
+            "wchan": "poll_schedule_timeout.constprop."
+          },
+          {
+            "tid": "11315",
+            "cpu": 0.4,
+            "state": "SNl+",
+            "wchan": "poll_schedule_timeout.constprop."
+          }
+        ]
+      },
+      {
+        "timestamp": "2026-10-09T13:03:31+09:00",
+        "rss_kib": 197812,
+        "log_bytes": 3870,
+        "modified": "2026-10-09 13:03:30.720105197 +0900",
+        "threads": [
+          {
+            "tid": "11294",
+            "cpu": 0.2,
+            "state": "SNl+",
+            "wchan": "futex_do_wait"
+          },
+          {
+            "tid": "11314",
+            "cpu": 0.5,
+            "state": "SNl+",
+            "wchan": "poll_schedule_timeout.constprop."
+          },
+          {
+            "tid": "11315",
+            "cpu": 0.7,
+            "state": "SNl+",
+            "wchan": "poll_schedule_timeout.constprop."
+          }
+        ]
+      }
+    ]
+  }
+}

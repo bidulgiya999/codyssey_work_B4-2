@@ -1,0 +1,29 @@
+2026-10-09T13:03:31+09:00
+jae0608    11291     437  0 13:03 pts/0    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/jae-test/evidence/deadlock-false-20261009-130309/app.log
+jae0608    11293   11291  0 13:03 pts/2    00:00:00 ./agent-leak-app
+jae0608    11294   11293  1 13:03 pts/2    00:00:00 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+  11294   11294  0.2 197812 00:00:00 SNl+ futex_do_wait                   agent-leak-app
+  11294   11314  0.5 197812 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+  11294   11315  0.7 197812 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
+2026-10-09 13:03:11,806 [INFO] [Thread-C] Calculating... (40%)
+2026-10-09 13:03:11,857 [INFO] [Thread-C] Calculating... (60%)
+2026-10-09 13:03:11,907 [INFO] [Thread-C] Calculating... (80%)
+2026-10-09 13:03:11,958 [INFO] [Thread-C] Task Completed. (100%)
+2026-10-09 13:03:12,009 [INFO] [Scheduler] All tasks completed.
+2026-10-09 13:03:12,022 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-10-09 13:03:12,023 [INFO] [CpuWorker] Started. Maximum CPU Limit: 40%
+2026-10-09 13:03:12,023 [INFO] [CpuWorker] Current Load: 5.00%
+2026-10-09 13:03:15,052 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-10-09 13:03:15,139 [INFO] [CpuWorker] Current Load: 6.67%
+2026-10-09 13:03:18,083 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-10-09 13:03:18,256 [INFO] [CpuWorker] Current Load: 13.41%
+2026-10-09 13:03:21,115 [INFO] [MemoryWorker] Current Heap: 100MB
+2026-10-09 13:03:21,372 [INFO] [CpuWorker] Current Load: 20.44%
+2026-10-09 13:03:24,147 [INFO] [MemoryWorker] Current Heap: 125MB
+2026-10-09 13:03:24,488 [INFO] [CpuWorker] Current Load: 27.91%
+2026-10-09 13:03:27,178 [INFO] [MemoryWorker] Current Heap: 150MB
+2026-10-09 13:03:27,604 [INFO] [CpuWorker] Current Load: 34.23%
+2026-10-09 13:03:30,206 [INFO] [MemoryWorker] Current Heap: 175MB
+2026-10-09 13:03:30,720 [INFO] [CpuWorker] Current Load: 38.46%

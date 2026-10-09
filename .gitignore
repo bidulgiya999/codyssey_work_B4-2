@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+api_keys/
+secret.key
+upload_files/
+agent-leak-app
+agent-leak-app-x86
+agent-leak-app-arm64
+work/
+tmp/

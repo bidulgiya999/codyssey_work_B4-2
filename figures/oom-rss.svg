@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="510" height="230" preserveAspectRatio="xMinYMin meet" viewBox="0 0 510 230" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="510" height="230"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-230)" style="clip-path: url(#clip)">
+		<g transform="">
+			<text x="55" y="216" style="font-family: Malgun Gothic, sans-serif; font-size: 11px;fill: rgb(9%,20%,30%); stroke:none;" transform="translate(0,432) scale(1,-1)">OOM: 프로세스 경과시간에 따른 RSS</text>
+			<path d="M 58,201 L 76,201 Z" style="stroke: rgb(20%,41%,69%); stroke-linecap: butt; stroke-width: 2;"/>
+			<text x="82" y="198" style="font-family: Malgun Gothic, sans-serif; font-size: 8px;fill: rgb(9%,20%,30%); stroke:none;" transform="translate(0,396) scale(1,-1)">Before</text>
+			<path d="M 295,201 L 313,201 Z" style="stroke: rgb(3%,49%,50%); stroke-linecap: butt; stroke-width: 2;"/>
+			<text x="319" y="198" style="font-family: Malgun Gothic, sans-serif; font-size: 8px;fill: rgb(9%,20%,30%); stroke:none;" transform="translate(0,396) scale(1,-1)">After</text>
+			<g transform="">
+				<g transform="">
+					<g transform="">
+						<path d="M 55,47 L 485,47 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<path d="M 55,47 L 55,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 116.428571,47 L 116.428571,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 177.857143,47 L 177.857143,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 239.285714,47 L 239.285714,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 300.714286,47 L 300.714286,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 362.142857,47 L 362.142857,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 423.571429,47 L 423.571429,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 485,47 L 485,42 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<g transform=" matrix(1,0,0,1,55,42)">
+							<text x="-1.927734375" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">0</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,116.428571,42)">
+							<text x="-1.927734375" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">5</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,177.857143,42)">
+							<text x="-3.85546875" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">10</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,239.285714,42)">
+							<text x="-3.85546875" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">15</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,300.714286,42)">
+							<text x="-3.85546875" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">20</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,362.142857,42)">
+							<text x="-3.85546875" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">25</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,423.571429,42)">
+							<text x="-3.85546875" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">30</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,485,42)">
+							<text x="-3.85546875" y="-7.000000000000001" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-14) scale(1,-1)">35</text>
+						</g>
+					</g>
+				</g>
+				<g transform="">
+					<g transform="">
+						<path d="M 55,47 L 55,182 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<path d="M 55,47 L 50,47 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 55,69.5 L 50,69.5 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 55,92 L 50,92 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 55,114.5 L 50,114.5 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 55,137 L 50,137 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 55,159.5 L 50,159.5 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 55,182 L 50,182 Z" style="stroke: rgb(38%,44%,52%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<g transform=" matrix(1,0,0,1,50,47)">
+							<text x="-3.85546875" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">0</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,50,69.5)">
+							<text x="-7.7109375" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">50</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,50,92)">
+							<text x="-11.56640625" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">100</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,50,114.5)">
+							<text x="-11.56640625" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">150</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,50,137)">
+							<text x="-11.56640625" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">200</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,50,159.5)">
+							<text x="-11.56640625" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">250</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,50,182)">
+							<text x="-11.56640625" y="-2.8000000000000007" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-5) scale(1,-1)">300</text>
+						</g>
+					</g>
+				</g>
+				<path d="M 55,69.5 L 485,69.5 Z" style="stroke: rgb(85%,88%,91%); stroke-linecap: butt; stroke-width: 0.4;"/>
+				<path d="M 55,92 L 485,92 Z" style="stroke: rgb(85%,88%,91%); stroke-linecap: butt; stroke-width: 0.4;"/>
+				<path d="M 55,114.5 L 485,114.5 Z" style="stroke: rgb(85%,88%,91%); stroke-linecap: butt; stroke-width: 0.4;"/>
+				<path d="M 55,137 L 485,137 Z" style="stroke: rgb(85%,88%,91%); stroke-linecap: butt; stroke-width: 0.4;"/>
+				<path d="M 55,159.5 L 485,159.5 Z" style="stroke: rgb(85%,88%,91%); stroke-linecap: butt; stroke-width: 0.4;"/>
+				<path d="M 55,182 L 485,182 Z" style="stroke: rgb(85%,88%,91%); stroke-linecap: butt; stroke-width: 0.4;"/>
+				<g transform="">
+					<polyline points="67.28571 55.0666, 79.57143 66.31836, 91.85714 66.31836, 104.1429 66.31836, 116.4286 77.57012, 128.7143 77.57012, 153.2857 77.57012, 165.5714 88.82188, 177.8571 88.82188, 190.1429 88.82188, 202.4286 100.0736, 214.7143 100.0736, 227 100.0736, 239.2857 111.3254, 251.5714 111.3254, 263.8571 111.3254" style="stroke: rgb(20%,41%,69%); stroke-linecap: round; stroke-width: 2.1; fill: None; fill-rule: evenodd;"/>
+					<polyline points="67.28571 55.11934, 79.57143 66.37109, 91.85714 66.37109, 104.1429 66.37109, 116.4286 77.62285, 128.7143 77.62285, 153.2857 77.62285, 165.5714 88.87461, 177.8571 88.87461, 190.1429 88.87461, 202.4286 100.1264, 214.7143 100.1264, 227 100.1264, 239.2857 111.3781, 251.5714 111.3781, 263.8571 111.3781, 276.1429 122.6299, 288.4286 122.6299, 300.7143 122.6299, 313 133.8816, 325.2857 133.8816, 337.5714 133.8816, 349.8571 145.1334, 362.1429 145.1334, 374.4286 145.1334, 386.7143 156.3852, 399 156.3852, 411.2857 156.3852, 423.5714 167.6369, 435.8571 167.6369, 448.1429 167.6369" style="stroke: rgb(3%,49%,50%); stroke-linecap: round; stroke-width: 1.3; fill: None; fill-rule: evenodd;"/>
+				</g>
+			</g>
+			<text x="6" y="181" style="font-family: Malgun Gothic, sans-serif; font-size: 8px;fill: rgb(9%,20%,30%); stroke:none;" transform="translate(0,362) scale(1,-1)">MiB</text>
+			<text x="182" y="25" style="font-family: Malgun Gothic, sans-serif; font-size: 8px;fill: rgb(9%,20%,30%); stroke:none;" transform="translate(0,50) scale(1,-1)">프로세스 경과시간 (초)</text>
+			<text x="55" y="7" style="font-family: Malgun Gothic, sans-serif; font-size: 7px;fill: rgb(9%,20%,30%); stroke:none;" transform="translate(0,14) scale(1,-1)">한도128/256MB의 초기 곡선 일부는 겹침. 앱 내부 Heap와 RSS는 별개 지표.</text>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,49 @@
+Script started on 2026-10-09 11:57:44+09:00 [COMMAND="./agent-leak-app" <not executed on terminal>]
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'jae0608' (uid=1000)
+[2/6] Verifying Environment Variables     [OK]
+   ... All required Envs correct
+[3/6] Checking Required Files             [OK]
+   ... Verified 'secret.key' with correct key string.
+[4/6] Checking Port Availability          [OK]
+   ... Port 15034 is available.
+[5/6] Verifying Log Permission            [OK]
+   ... Log directory is writable: /home/jae0608/jae-test/logs
+[6/6] Verifying Mission Environment       [OK]
+   ... MEMORY_LIMIT=512MB, CPU_MAX_OCCUPY=80%, MULTI_THREAD_ENABLE=False
+------------------------------------------------------------
+All Boot Checks Passed!
+Agent READY
+2026-10-09 11:57:44,269 [INFO] [SafetyGuard] Process priority lowered (nice=10).
+2026-10-09 11:57:44,269 [INFO] Agent listening at port 15034
+
+==================================================
+ [ Agent Initiate ] Resource Check 
+==================================================
+ [ MEMORY ] Limit: 512MB 		[ OK ]
+ [ CPU    ] Limit: 80%  		[ WARNING: Recommend Under 50% ]
+ [ THREAD ] Concurrency: False 		[ OK ]
+--------------------------------------------------
+ >>> SYSTEM STATUS: STABLE. STARTING WORKLOAD MONITORING...
+==================================================
+
+2026-10-09 11:57:46,279 [INFO] [CpuWorker] Started. Maximum CPU Limit: 80%
+2026-10-09 11:57:46,280 [INFO] [CpuWorker] Current Load: 5.00%
+2026-10-09 11:57:49,396 [INFO] [CpuWorker] Current Load: 10.92%
+2026-10-09 11:57:52,512 [INFO] [CpuWorker] Current Load: 20.30%
+2026-10-09 11:57:55,628 [INFO] [CpuWorker] Current Load: 23.53%
+2026-10-09 11:57:58,744 [INFO] [CpuWorker] Current Load: 25.80%
+2026-10-09 11:58:01,860 [INFO] [CpuWorker] Current Load: 31.23%
+2026-10-09 11:58:04,976 [INFO] [CpuWorker] Current Load: 40.61%
+2026-10-09 11:58:08,092 [INFO] [CpuWorker] Current Load: 41.42%
+2026-10-09 11:58:11,208 [INFO] [CpuWorker] Current Load: 45.22%
+2026-10-09 11:58:14,324 [INFO] [CpuWorker] Current Load: 48.69%
+2026-10-09 11:58:17,438 [INFO] [CpuWorker] Current Load: 48.93%
+2026-10-09 11:58:20,549 [INFO] [CpuWorker] Current Load: 53.11%
+2026-10-09 11:58:20,649 [CRITICAL] [CpuWorker] CPU Threshold Violated! (53.11%).
+
+>>> [SYSTEM] WATCHDOG: INITIATING EMERGENCY ABORT (SIGTERM) <<<
+
+
+Script done on 2026-10-09 11:58:20+09:00 [COMMAND_EXIT_CODE="143"]
