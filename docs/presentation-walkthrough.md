@@ -1,5 +1,7 @@
 # GitHub 화면으로 설명하는 B4-2 전체 발표 대본
 
+**링크를 연 뒤 내용을 해석하려면:** 각 원본 링크 옆의 **코드·출력 해석**을 누르세요. [파일32종의 상세 해설](linked-file-commentary.md)에서 명령의 옵션·처리 순서와 출력의 열·값·문장을 설명합니다.
+
 작성일: 2026-10-23. 기준 자료: 이 저장소의 2026-10-09 실험. 이 문서는 교안을 바탕으로 발표를 준비하는 자료이며 새 실습 완료를 뜻하지 않습니다. 실제로 이해하고 확인한 범위에 맞춰 표현을 조정합니다.
 
 **출력 화면 읽기:** 아래 회색 코드 블록은 원본 파일에 보존된 실제 출력 또는 저장 파일 내용입니다. 입력할 명령이 아닙니다. 새로 실행하거나 화면을 합성하지 않았습니다. CRLF 줄바꿈을 화면 표시용 LF로 정규화했으며, 발췌 범위와 원본 링크를 표시했습니다. 새 실습에서는 시각·PID·수치가 달라질 수 있습니다.
@@ -21,11 +23,11 @@
 | 9 | 보고서 양식·분석 한계 | 증거에 근거한 협업 보고 |
 | 10 | 정리 발언 | 배운 점과 추가 확인할 내용 |
 
-설명의 공통 구조는 **현상 → 증거 → 원인 판단 → 조치 → 결과 → 한계**입니다. 원본 파일 옆의 해설이 필요하면 [증거 링크별 출력 해설](evidence-reading-guide.md)을 함께 엽니다.
+설명의 공통 구조는 **현상 → 증거 → 원인 판단 → 조치 → 결과 → 한계**입니다. 원본 파일 옆의 해설이 필요하면 [증거 링크별 출력 해설](evidence-reading-guide.md) · [코드·출력 해석](linked-file-commentary.md#해설-01)을 함께 엽니다.
 
 ## 2. README: 과제 전체를 소개하기
 
-**열 화면:** [저장소 README](../README.md)의 소개와 검증 결과 표.
+**열 화면:** [저장소 README](../README.md) · [코드·출력 해석](linked-file-commentary.md#해설-02)의 소개와 검증 결과 표.
 
 **발표할 말**
 
@@ -51,7 +53,7 @@
 
 ## 3. 실행 환경: 왜 준비 명령부터 확인했는가
 
-**열 화면:** [환경 정보](../evidence/environment.txt), [실험의 env.sh](../scripts/env.sh), OOM 보고서의 부팅 로그.
+**열 화면:** [환경 정보](../evidence/environment.txt) · [코드·출력 해석](linked-file-commentary.md#해설-03), [실험의 env.sh](../scripts/env.sh) · [코드·출력 해석](linked-file-commentary.md#해설-04), OOM 보고서의 부팅 로그.
 
 **발표할 말**
 
@@ -116,7 +118,7 @@ Mem:           7.5Gi       553Mi       6.7Gi       4.1Mi       345Mi       6.9Gi
 Swap:          2.0Gi          0B       2.0Gi
 ```
 
-원본: [environment.txt](../evidence/environment.txt#L1-L20). date·uname·id·os-release·nproc·free의 결과를 한 파일에 모은 기록입니다. nproc 결과인14는 이어지는 free 표와 다른 출력입니다.
+원본: [environment.txt](../evidence/environment.txt#L1-L20) · [코드·출력 해석](linked-file-commentary.md#해설-03). date·uname·id·os-release·nproc·free의 결과를 한 파일에 모은 기록입니다. nproc 결과인14는 이어지는 free 표와 다른 출력입니다.
 
 **화면 해설:** `uid=1000(jae0608)`는 사용자 번호와 이름이며, `x86_64`는 아키텍처입니다. `Mem: 7.5Gi`는 이 WSL 환경이 보는 물리 메모리 총량입니다. `available 6.9Gi`는 당시 가용량이며 모든 실험 시점의 메모리 상태를 뜻하지 않습니다.
 
@@ -143,13 +145,13 @@ All Boot Checks Passed!
 Agent READY
 ```
 
-원본: [app.log](../evidence/oom-128-20261009-113259/app.log#L1-L16). 준비 명령의 효과를 앱이 검사한 결과입니다.
+원본: [app.log](../evidence/oom-128-20261009-113259/app.log#L1-L16) · [코드·출력 해석](linked-file-commentary.md#해설-05). 준비 명령의 효과를 앱이 검사한 결과입니다.
 
 **화면 해설:** `[1/6]~[6/6]`은 여섯 가지 부팅 검사 순서입니다. `[OK]`와 `Agent READY`는 실행 전 조건을 통과했다는 의미입니다. 이후 작업의 안정성까지 보장하지 않습니다.
 
 ## 4. 관제 방법: 어떤 프로세스를 어떻게 기록했는가
 
-**열 화면:** [monitor.sh](../scripts/monitor.sh), [OOM 작업 PID962의 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv).
+**열 화면:** [monitor.sh](../scripts/monitor.sh) · [코드·출력 해석](linked-file-commentary.md#해설-06), [OOM 작업 PID962의 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv) · [코드·출력 해석](linked-file-commentary.md#해설-07).
 
 **발표할 말**
 
@@ -201,13 +203,13 @@ timestamp,pid,ppid,elapsed_s,cpu_avg_pct,mem_pct,rss_kib,threads,state
 2026-10-09T11:33:17+09:00,962,954,17,0.8,1.8,146376,1,SN
 ```
 
-원본: [monitor-962.csv](../evidence/oom-128-20261009-113259/monitor-962.csv#L1-L17). 각 줄은 같은 PID의 다른 측정 시각입니다.
+원본: [monitor-962.csv](../evidence/oom-128-20261009-113259/monitor-962.csv#L1-L17) · [코드·출력 해석](linked-file-commentary.md#해설-07). 각 줄은 같은 PID의 다른 측정 시각입니다.
 
 **화면 해설:** 처음 RSS18356에서 마지막146376KiB까지 증가하는 열을 따라 읽습니다. `elapsed_s`가 커지는 동안 CPU 평균은 낮지만 메모리는 증가했습니다. 메모리와CPU를 별개 지표로 읽어야 하는 이유입니다. 부모PID954와 작업PID962를 혼동하지 않습니다.
 
 ## 5. 설정값: 왜 이 조합을 사용했는가
 
-**열 화면:** [통합 교안의 설정값 설명](complete-course.md#실험-설정값은-왜-이렇게-골랐는가).
+**열 화면:** [통합 교안의 설정값 설명](complete-course.md#실험-설정값은-왜-이렇게-골랐는가) · [코드·출력 해석](linked-file-commentary.md#해설-08).
 
 **발표할 말**
 
@@ -247,7 +249,7 @@ CPU_MAX_OCCUPY=100
 MULTI_THREAD_ENABLE=false
 ```
 
-원본: [settings.txt](../evidence/oom-128-20261009-113259/settings.txt#L1-L3). 
+원본: [settings.txt](../evidence/oom-128-20261009-113259/settings.txt#L1-L3) · [코드·출력 해석](linked-file-commentary.md#해설-09). 
 
 
 ### 출력 화면 5-2. OOM 변경 후 저장 설정
@@ -260,13 +262,13 @@ CPU_MAX_OCCUPY=100
 MULTI_THREAD_ENABLE=false
 ```
 
-원본: [settings.txt](../evidence/oom-256-20261009-113740/settings.txt#L1-L3). 
+원본: [settings.txt](../evidence/oom-256-20261009-113740/settings.txt#L1-L3) · [코드·출력 해석](linked-file-commentary.md#해설-10). 
 
 **화면 해설:** 메모리128→256만 바뀌었고 CPU100과false는 유지됐습니다. 이 파일은 실행 전에 저장한 설정 내용이며, 적용 결과는 앞의 부팅 로그와도 대조합니다. 값을 저장했다는 사실과 앱이 그 값을 읽었다는 사실을 구분합니다.
 
 ## 6. OOM: 메모리 증가와 종료 원인을 설명하기
 
-**열 화면:** [OOM 보고서](../reports/01-oom.md) → [128 로그](../evidence/oom-128-20261009-113259/app.log) → [128 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv) → 보고서의 전후 비교 표.
+**열 화면:** [OOM 보고서](../reports/01-oom.md) · [코드·출력 해석](linked-file-commentary.md#해설-11) → [128 로그](../evidence/oom-128-20261009-113259/app.log) · [코드·출력 해석](linked-file-commentary.md#해설-05) → [128 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv) · [코드·출력 해석](linked-file-commentary.md#해설-07) → 보고서의 전후 비교 표.
 
 **발표할 말**
 
@@ -314,7 +316,7 @@ RSS와 내부 Heap은 다른 지표이고,1초 간격 표본은 마지막 할당
 2026-10-09 11:33:17,169 [CRITICAL] [MemoryGuard] Self-terminating process 962 to prevent system instability.
 ```
 
-원본: [app.log](../evidence/oom-128-20261009-113259/app.log#L30-L37). 
+원본: [app.log](../evidence/oom-128-20261009-113259/app.log#L30-L37) · [코드·출력 해석](linked-file-commentary.md#해설-05). 
 
 
 ### 출력 화면 6-2. 256MB 조건의 증가와 보호 종료
@@ -337,13 +339,13 @@ RSS와 내부 Heap은 다른 지표이고,1초 간격 표본은 마지막 할당
 2026-10-09 11:38:13,172 [CRITICAL] [MemoryGuard] Self-terminating process 1156 to prevent system instability.
 ```
 
-원본: [app.log](../evidence/oom-256-20261009-113740/app.log#L30-L42). 
+원본: [app.log](../evidence/oom-256-20261009-113740/app.log#L30-L42) · [코드·출력 해석](linked-file-commentary.md#해설-12). 
 
 **화면 해설:** 두 출력 모두 `[CRITICAL] [MemoryGuard]`를 확인합니다. `150MB >= 128MB`와 `275MB >= 256MB`는 앱 내부 한도 비교입니다. 마지막 `Self-terminating`이 앱의 자체 종료 요청을 설명합니다. 생존 시간은 이 블록의 첫25MB 로그가 아니라 보고서에서 정한 `Agent listening`부터 계산했습니다.
 
 ## 7. CPU: 부하 상승과 Watchdog 종료를 설명하기
 
-**열 화면:** [CPU 보고서](../reports/02-cpu.md) → [80 PTY 로그](../evidence/cpu-80-pty-20261009-115744/app.log) → [top 원본](../evidence/cpu-80-pty-20261009-115744/top.log) → [40 로그](../evidence/cpu-40-pty-20261009-122044/app.log).
+**열 화면:** [CPU 보고서](../reports/02-cpu.md) · [코드·출력 해석](linked-file-commentary.md#해설-13) → [80 PTY 로그](../evidence/cpu-80-pty-20261009-115744/app.log) · [코드·출력 해석](linked-file-commentary.md#해설-14) → [top 원본](../evidence/cpu-80-pty-20261009-115744/top.log) · [코드·출력 해석](linked-file-commentary.md#해설-15) → [40 로그](../evidence/cpu-40-pty-20261009-122044/app.log) · [코드·출력 해석](linked-file-commentary.md#해설-16).
 
 **발표할 말**
 
@@ -393,7 +395,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   7065.7 avail Mem
 
 ```
 
-원본: [top.log](../evidence/cpu-80-pty-20261009-115744/top.log#L2481-L2490). 최초 프레임을 제외한 관측 최대50.0%가 나타나는 프레임 중 첫 번째를 발췌했습니다. 시간은11:58:11입니다.
+원본: [top.log](../evidence/cpu-80-pty-20261009-115744/top.log#L2481-L2490) · [코드·출력 해석](linked-file-commentary.md#해설-15). 최초 프레임을 제외한 관측 최대50.0%가 나타나는 프레임 중 첫 번째를 발췌했습니다. 시간은11:58:11입니다.
 
 **화면 해설:** PID1921 행의 `%CPU 50.0`이 작업 프로세스의 구간 사용률입니다. PID1920은 실행기입니다. 위의 `%Cpu(s)`는 시스템 전체 요약이므로 같은 값일 필요가 없습니다. 현재 상태S는 표본 순간 수면 중이라는 뜻이며, 직전 구간에 CPU를 사용했다는50%와 모순되지 않습니다. `Tasks: 2`는 PID 필터가 적용된 화면의 작업 수로 읽습니다.
 
@@ -412,7 +414,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   7065.7 avail Mem
 Script done on 2026-10-09 11:58:20+09:00 [COMMAND_EXIT_CODE="143"]
 ```
 
-원본: [app.log](../evidence/cpu-80-pty-20261009-115744/app.log#L42-L49). 
+원본: [app.log](../evidence/cpu-80-pty-20261009-115744/app.log#L42-L49) · [코드·출력 해석](linked-file-commentary.md#해설-14). 
 
 **화면 해설:** 위 top 화면과 종료 로그는 서로 다른 시각입니다. `Current Load: 53.11%`는 앱 내부 값이고, `WATCHDOG ... (SIGTERM)`은 보호 종료 요청입니다. `Script done`은 기록 세션 종료 표지이며 `COMMAND_EXIT_CODE="143"`은 script가 기록한 실행 명령의 종료 상태입니다.
 
@@ -433,7 +435,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6913.4 avail Mem
 
 ```
 
-원본: [top.log](../evidence/cpu-40-pty-20261009-122044/top.log#L1941-L1950). 최초 프레임을 제외한 관측 최대40.0%가 나타나는 프레임 중 첫 번째입니다.
+원본: [top.log](../evidence/cpu-40-pty-20261009-122044/top.log#L1941-L1950) · [코드·출력 해석](linked-file-commentary.md#해설-17). 최초 프레임을 제외한 관측 최대40.0%가 나타나는 프레임 중 첫 번째입니다.
 
 
 ### 출력 화면 7-4. CPU40 도달 후 냉각 구간
@@ -449,7 +451,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6913.4 avail Mem
 2026-10-09 12:21:12,642 [INFO] [CpuWorker] Current Load: 32.54%
 ```
 
-원본: [app.log](../evidence/cpu-40-pty-20261009-122044/app.log#L68-L73). 
+원본: [app.log](../evidence/cpu-40-pty-20261009-122044/app.log#L68-L73) · [코드·출력 해석](linked-file-commentary.md#해설-16). 
 
 
 ### 출력 화면 7-5. 냉각 완료와 재상승 시작
@@ -461,7 +463,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6913.4 avail Mem
 2026-10-09 12:21:34,456 [INFO] [CpuWorker] Current Load: 5.00%
 ```
 
-원본: [app.log](../evidence/cpu-40-pty-20261009-122044/app.log#L87-L88). 
+원본: [app.log](../evidence/cpu-40-pty-20261009-122044/app.log#L87-L88) · [코드·출력 해석](linked-file-commentary.md#해설-16). 
 
 
 ### 출력 화면 7-6. 경과55초 시점의 생존 확인
@@ -474,13 +476,13 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6913.4 avail Mem
    2359    2358      55  1.4  6.1 479420   3 SNl+
 ```
 
-원본: [ps-check.txt](../evidence/cpu-40-pty-20261009-122044/ps-check.txt#L1-L3). 
+원본: [ps-check.txt](../evidence/cpu-40-pty-20261009-122044/ps-check.txt#L1-L3) · [코드·출력 해석](linked-file-commentary.md#해설-18). 
 
 **화면 해설:** `Peak reached` 뒤 `Starting cooldown`이 부하를 낮추는 전환이며, `Cooldown complete (5.00%)`는 냉각 후 재상승을 시작한 로그입니다. ps의 `ELAPSED 55`는 해당 프로세스 경과 시간이고 PID2359가 남아 있습니다. `%CPU 1.4`는 누적 평균으로 top 구간 최대40.0%와 다를 수 있습니다. `RSS 479420`도 그 시각의 메모리이며 top12:21:06 화면과 측정 시각이 다릅니다.
 
 ## 8. Deadlock: 살아 있지만 진행하지 않는 상태 설명하기
 
-**열 화면:** [Deadlock 보고서](../reports/03-deadlock.md) → [true 스냅샷1](../evidence/deadlock-true-20261009-125943/snapshot-1.txt) → [스냅샷2](../evidence/deadlock-true-20261009-125943/snapshot-2.txt) → [대기 로그](../evidence/deadlock-true-20261009-125943/app.log).
+**열 화면:** [Deadlock 보고서](../reports/03-deadlock.md) · [코드·출력 해석](linked-file-commentary.md#해설-19) → [true 스냅샷1](../evidence/deadlock-true-20261009-125943/snapshot-1.txt) · [코드·출력 해석](linked-file-commentary.md#해설-20) → [스냅샷2](../evidence/deadlock-true-20261009-125943/snapshot-2.txt) · [코드·출력 해석](linked-file-commentary.md#해설-21) → [대기 로그](../evidence/deadlock-true-20261009-125943/app.log) · [코드·출력 해석](linked-file-commentary.md#해설-22).
 
 **발표할 말**
 
@@ -510,7 +512,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6913.4 avail Mem
 >
 > 이번에는 A와B의 보유 로그, 보유 상태의 추가 요청, 서로 반대인 대기 관계를 확인했습니다. 비선점은 대기 중 회수 로그가 없는 관측과 일반적인 락 모델로 해석했으며 내부 락 구현까지 확인한 것은 아닙니다.
 
-**변경 후 열 화면:** [false 스냅샷1](../evidence/deadlock-false-20261009-130309/snapshot-1.txt), [스냅샷2](../evidence/deadlock-false-20261009-130309/snapshot-2.txt).
+**변경 후 열 화면:** [false 스냅샷1](../evidence/deadlock-false-20261009-130309/snapshot-1.txt) · [코드·출력 해석](linked-file-commentary.md#해설-23), [스냅샷2](../evidence/deadlock-false-20261009-130309/snapshot-2.txt) · [코드·출력 해석](linked-file-commentary.md#해설-24).
 
 **발표할 말**
 
@@ -539,7 +541,7 @@ jae0608     9226    9225  0 12:59 pts/2    00:00:00 ./agent-leak-app
 log_bytes=2792 modified=2026-10-09 12:59:52.286312863 +0900
 ```
 
-원본: [snapshot-1.txt](../evidence/deadlock-true-20261009-125943/snapshot-1.txt#L1-L9). 
+원본: [snapshot-1.txt](../evidence/deadlock-true-20261009-125943/snapshot-1.txt#L1-L9) · [코드·출력 해석](linked-file-commentary.md#해설-20). 
 
 
 ### 출력 화면 8-2. true 10초 후 재관측
@@ -558,7 +560,7 @@ jae0608     9226    9225  0 12:59 pts/2    00:00:00 ./agent-leak-app
 log_bytes=2792 modified=2026-10-09 12:59:52.286312863 +0900
 ```
 
-원본: [snapshot-2.txt](../evidence/deadlock-true-20261009-125943/snapshot-2.txt#L1-L9). 
+원본: [snapshot-2.txt](../evidence/deadlock-true-20261009-125943/snapshot-2.txt#L1-L9) · [코드·출력 해석](linked-file-commentary.md#해설-21). 
 
 **화면 해설:** 같은 PID9226과 세TID가 존재합니다. 두 화면의RSS18512, 로그크기2792, 수정시각이 같습니다. CPU0.3→0.1은 ps의 누적 평균 변화일 수 있으며, 이를 작업 재개로 해석하지 않습니다. `SNl+`의 `l`은 멀티스레드, `+`는 터미널 전경 프로세스 그룹에 속한다는 뜻입니다.
 
@@ -577,7 +579,7 @@ log_bytes=2792 modified=2026-10-09 12:59:52.286312863 +0900
 2026-10-09 12:59:52,286 [INFO] [AgentWorker][Worker-Thread-1] WAITING for [Socket_Pool_B]... (Status: BLOCKED)
 ```
 
-원본: [snapshot-1.txt](../evidence/deadlock-true-20261009-125943/snapshot-1.txt#L22-L29). 
+원본: [snapshot-1.txt](../evidence/deadlock-true-20261009-125943/snapshot-1.txt#L22-L29) · [코드·출력 해석](linked-file-commentary.md#해설-20). 
 
 **화면 해설:** T1이A를 보유하고 T2가B를 보유한 뒤 T2는A, T1은B를 기다립니다. `Holding`은 보유 상태, `WAITING`과`BLOCKED`는 추가 자원을 기다리는 상태라는 앱의 설명입니다. 스레드 대기 위치만으로 단정하지 않고 이 자원 관계를 함께 읽습니다.
 
@@ -597,7 +599,7 @@ jae0608    11294   11293  1 13:03 pts/2    00:00:00 ./agent-leak-app
 log_bytes=3474 modified=2026-10-09 13:03:21.368107854 +0900
 ```
 
-원본: [snapshot-1.txt](../evidence/deadlock-false-20261009-130309/snapshot-1.txt#L1-L9). 
+원본: [snapshot-1.txt](../evidence/deadlock-false-20261009-130309/snapshot-1.txt#L1-L9) · [코드·출력 해석](linked-file-commentary.md#해설-23). 
 
 
 ### 출력 화면 8-5. false 10초 후 재관측
@@ -616,13 +618,13 @@ jae0608    11294   11293  1 13:03 pts/2    00:00:00 ./agent-leak-app
 log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
 ```
 
-원본: [snapshot-2.txt](../evidence/deadlock-false-20261009-130309/snapshot-2.txt#L1-L9). 
+원본: [snapshot-2.txt](../evidence/deadlock-false-20261009-130309/snapshot-2.txt#L1-L9) · [코드·출력 해석](linked-file-commentary.md#해설-24). 
 
 **화면 해설:** 로그3474→3870바이트, RSS121000→197812KiB로 달라집니다. 메인 스레드는futex대기지만 워커는poll대기이며 작업 로그도 진행합니다. 여러 값이 바뀐다는 사실만으로 정상이라고 단정하지 않고 작업 진행 로그와 함께 회피를 확인했습니다. 같은 PID의RSS를 세 행만큼 더하지 않습니다.
 
 ## 9. 종료 코드와 정리: 자동 종료와 수동 종료 구분하기
 
-**열 화면:** [CPU40 정리 로그](../evidence/cpu-40-pty-20261009-122044/cleanup.log), [Deadlock true 정리 로그](../evidence/deadlock-true-20261009-125943/cleanup.log), 각 폴더의 exit-code.txt와 종료 후 ps.
+**열 화면:** [CPU40 정리 로그](../evidence/cpu-40-pty-20261009-122044/cleanup.log) · [코드·출력 해석](linked-file-commentary.md#해설-25), [Deadlock true 정리 로그](../evidence/deadlock-true-20261009-125943/cleanup.log) · [코드·출력 해석](linked-file-commentary.md#해설-26), 각 폴더의 exit-code.txt와 종료 후 ps.
 
 **발표할 말**
 
@@ -647,7 +649,7 @@ log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
 137
 ```
 
-원본: [exit-code.txt](../evidence/oom-128-20261009-113259/exit-code.txt#L1-L1). 
+원본: [exit-code.txt](../evidence/oom-128-20261009-113259/exit-code.txt#L1-L1) · [코드·출력 해석](linked-file-commentary.md#해설-27). 
 
 
 ### 출력 화면 9-2. CPU80 PTY 종료 상태 파일
@@ -658,7 +660,7 @@ log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
 143
 ```
 
-원본: [exit-code.txt](../evidence/cpu-80-pty-20261009-115744/exit-code.txt#L1-L1). 
+원본: [exit-code.txt](../evidence/cpu-80-pty-20261009-115744/exit-code.txt#L1-L1) · [코드·출력 해석](linked-file-commentary.md#해설-28). 
 
 
 ### 출력 화면 9-3. CPU40 실험자의 정리 기록
@@ -670,7 +672,7 @@ log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
 2026-10-09T12:46:44+09:00 manual SIGTERM PID=2359
 ```
 
-원본: [cleanup.log](../evidence/cpu-40-pty-20261009-122044/cleanup.log#L1-L2). 
+원본: [cleanup.log](../evidence/cpu-40-pty-20261009-122044/cleanup.log#L1-L2) · [코드·출력 해석](linked-file-commentary.md#해설-25). 
 
 
 ### 출력 화면 9-4. 정리 후 ps에는 제목만 남음
@@ -681,13 +683,13 @@ log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
     PID    PPID ELAPSED %CPU %MEM   RSS NLWP STAT
 ```
 
-원본: [ps-after-cleanup.txt](../evidence/cpu-40-pty-20261009-122044/ps-after-cleanup.txt#L1-L1). 
+원본: [ps-after-cleanup.txt](../evidence/cpu-40-pty-20261009-122044/ps-after-cleanup.txt#L1-L1) · [코드·출력 해석](linked-file-commentary.md#해설-29). 
 
 **화면 해설:** 위137과143은 서로 다른 실행의 파일입니다. CPU40의 `manual SIGTERM`은 실험자가 정리를 위해 보낸 요청입니다. 정리 후 제목만 있는ps 출력은 조회 대상 행이 없다는 뜻입니다. 수동 정리 기록이12:46:44라고 해서 앞의55초 관측부터 그때까지 연속 안정성을 입증한 것으로 확대하지 않습니다.
 
 ## 10. 보고서와 분석 한계: 동료가 확인할 수 있게 정리하기
 
-**열 화면:** [Issue 보고서 양식](../templates/issue-report-template.md), 세 보고서의 원인 분석과 조치·검증 절.
+**열 화면:** [Issue 보고서 양식](../templates/issue-report-template.md) · [코드·출력 해석](linked-file-commentary.md#해설-30), 세 보고서의 원인 분석과 조치·검증 절.
 
 **발표할 말**
 
@@ -740,6 +742,6 @@ log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
 
 ## 13. 발표 자료를 읽은 뒤 직접 실습하는 순서
 
-[통합 교안](complete-course.md)의 제1부로 준비 이유와 출력을 읽고, 제2부의 실습 절차를 단계별로 진행합니다. 긴 문서 전체를 터미널에 한 번에 붙여넣지 않습니다. 입력할 명령만 실행하고 실제 출력과 질문을 [학습 기록 양식](../templates/learning-record-template.md)에 적습니다.
+[통합 교안](complete-course.md) · [코드·출력 해석](linked-file-commentary.md#해설-08)의 제1부로 준비 이유와 출력을 읽고, 제2부의 실습 절차를 단계별로 진행합니다. 긴 문서 전체를 터미널에 한 번에 붙여넣지 않습니다. 입력할 명령만 실행하고 실제 출력과 질문을 [학습 기록 양식](../templates/learning-record-template.md) · [코드·출력 해석](linked-file-commentary.md#해설-31)에 적습니다.
 
-새 실습은 새 폴더·시각·PID로 기록하며 이 대본의2026-10-09 수치를 새 결과로 복사하지 않습니다. 기존 원본과 새 결과가 다르면 그대로 남기고 조건과 관측 범위를 확인합니다. 학습을 시작할 때는 [함께 진행하는 방법](guided-learning.md)을 따릅니다.
+새 실습은 새 폴더·시각·PID로 기록하며 이 대본의2026-10-09 수치를 새 결과로 복사하지 않습니다. 기존 원본과 새 결과가 다르면 그대로 남기고 조건과 관측 범위를 확인합니다. 학습을 시작할 때는 [함께 진행하는 방법](guided-learning.md) · [코드·출력 해석](linked-file-commentary.md#해설-32)을 따릅니다.
