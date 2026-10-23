@@ -1,5 +1,7 @@
 # [Bug] OOM Crash - MEMORY_LIMIT 초과 시 MemoryGuard 자체 종료
 
+증거를 처음 읽는다면 [이 보고서의 증거 파일·출력 해설](../docs/evidence-reading-guide.md#2-oom-변경-전-128mb)을 먼저 보세요. 각 파일 링크 옆에 수집 이유와 출력 해석을 설명했습니다.
+
 실험일: 2026-10-09 KST · 실행 계정: jae0608(UID 1000) · 환경: Ubuntu 26.04.1 LTS / WSL2 / x86_64
 
 ## 1. Description (현상 설명)
@@ -79,7 +81,7 @@ After:
 PID PPID ELAPSED %CPU %MEM RSS NLWP STAT
 ```
 
-원본: [128MB 로그](../evidence/oom-128-20261009-113259/app.log), [128MB CSV](../evidence/oom-128-20261009-113259/monitor-962.csv), [256MB 로그](../evidence/oom-256-20261009-113740/app.log), [256MB CSV](../evidence/oom-256-20261009-113740/monitor-1156.csv). 설정·PID·종료 후 출력·종료 코드도 각 폴더에 보존했습니다.
+원본: [128MB 로그](../evidence/oom-128-20261009-113259/app.log) ([출력 해설](../docs/evidence-reading-guide.md#2-oom-변경-전-128mb)), [128MB CSV](../evidence/oom-128-20261009-113259/monitor-962.csv) ([출력 해설](../docs/evidence-reading-guide.md#2-oom-변경-전-128mb)), [256MB 로그](../evidence/oom-256-20261009-113740/app.log) ([출력 해설](../docs/evidence-reading-guide.md#3-oom-변경-후-256mb)), [256MB CSV](../evidence/oom-256-20261009-113740/monitor-1156.csv) ([출력 해설](../docs/evidence-reading-guide.md#3-oom-변경-후-256mb)). 설정·PID·종료 후 출력·종료 코드도 각 폴더에 보존했습니다.
 
 ## 3. Root Cause Analysis (원인 분석)
 

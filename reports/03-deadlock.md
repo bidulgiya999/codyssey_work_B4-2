@@ -1,5 +1,7 @@
 # [Bug] Deadlock - 상반된 락 획득 순서로 두 워커가 순환 대기
 
+증거를 처음 읽는다면 [이 보고서의 증거 파일·출력 해설](../docs/evidence-reading-guide.md#7-deadlock-변경-전-true)을 먼저 보세요. 각 파일 링크 옆에 수집 이유와 출력 해석을 설명했습니다.
+
 실험일: 2026-10-09 KST · 환경: Ubuntu 26.04.1 LTS / WSL2 / x86_64
 
 ## 1. Description (현상 설명)
@@ -65,7 +67,7 @@ log_bytes=2792 modified=2026-10-09 12:59:52.286312863 +0900
 
 ![Deadlock 스냅샷 비교](../figures/deadlock-comparison.svg)
 
-원본: [Before 로그](../evidence/deadlock-true-20261009-125943/app.log), [스냅샷1](../evidence/deadlock-true-20261009-125943/snapshot-1.txt), [스냅샷2](../evidence/deadlock-true-20261009-125943/snapshot-2.txt), [Before CSV](../evidence/deadlock-true-20261009-125943/monitor-9226.csv), [After 스냅샷1](../evidence/deadlock-false-20261009-130309/snapshot-1.txt), [After 스냅샷2](../evidence/deadlock-false-20261009-130309/snapshot-2.txt).
+원본: [Before 로그](../evidence/deadlock-true-20261009-125943/app.log) ([출력 해설](../docs/evidence-reading-guide.md#7-deadlock-변경-전-true)), [스냅샷1](../evidence/deadlock-true-20261009-125943/snapshot-1.txt) ([출력 해설](../docs/evidence-reading-guide.md#7-deadlock-변경-전-true)), [스냅샷2](../evidence/deadlock-true-20261009-125943/snapshot-2.txt) ([출력 해설](../docs/evidence-reading-guide.md#7-deadlock-변경-전-true)), [Before CSV](../evidence/deadlock-true-20261009-125943/monitor-9226.csv) ([출력 해설](../docs/evidence-reading-guide.md#7-deadlock-변경-전-true)), [After 스냅샷1](../evidence/deadlock-false-20261009-130309/snapshot-1.txt) ([출력 해설](../docs/evidence-reading-guide.md#8-deadlock-변경-후-false)), [After 스냅샷2](../evidence/deadlock-false-20261009-130309/snapshot-2.txt) ([출력 해설](../docs/evidence-reading-guide.md#8-deadlock-변경-후-false)).
 
 ## 3. Root Cause Analysis (원인 분석)
 

@@ -50,7 +50,7 @@
 
 **답변의 핵심:** 일반 계정·환경변수·키·포트·로그 권한·미션 환경 6단계 검사와 Agent READY를 확인했습니다. 이어서 실제 작업 로그도 확인했습니다. 이 앱의 AGENT_KEY_PATH는 키 디렉터리이고 그 안에 secret.key가 있습니다.
 
-**증거:** [OOM 부팅 로그](../evidence/oom-128-20261009-113259/app.log).
+**증거:** [OOM 부팅 로그](../evidence/oom-128-20261009-113259/app.log) ([출력 해설](evidence-reading-guide.md#2-oom-변경-전-128mb)).
 
 **구분:** 포트 사전 조회의 제목 행만으로 이후 바인딩 성공까지 보장하지 않습니다. READY도 장기 정상 동작이나 요청 성공률을 보장하지 않습니다.
 
@@ -60,7 +60,7 @@
 
 **답변의 핵심:** 실제 사용량이 작업 자식에서 증가했기 때문입니다. PID와 PPID로 관계를 확인했고 부모만 관측해 자식의 메모리 증가를 놓치는 일을 피했습니다. PTY 실행의 SESSION_PID는 script 작업이므로 앱 PID와 구분했습니다.
 
-**증거:** [OOM 시작 ps](../evidence/oom-128-20261009-113259/ps-start.txt), [CPU 시작 ps](../evidence/cpu-80-pty-20261009-115744/ps-start.txt).
+**증거:** [OOM 시작 ps](../evidence/oom-128-20261009-113259/ps-start.txt) ([출력 해설](evidence-reading-guide.md#2-oom-변경-전-128mb)), [CPU 시작 ps](../evidence/cpu-80-pty-20261009-115744/ps-start.txt) ([출력 해설](evidence-reading-guide.md#5-cpu-변경-전-80-설정)).
 
 ### Q9. monitor.sh를 직접 설명해보세요.
 
@@ -76,7 +76,7 @@
 
 **답변의 핵심:** 전체 사용률만으로 원인을 확정하지 않았습니다. 대상 프로세스 RSS 증가와 앱의 한도 초과·자체 종료 로그를 연결했습니다. MEMORY_LIMIT은 이 앱에 전달한 설정입니다.
 
-**증거:** [PID 962 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv), [MemoryGuard 로그](../evidence/oom-128-20261009-113259/app.log).
+**증거:** [PID 962 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv) ([출력 해설](evidence-reading-guide.md#2-oom-변경-전-128mb)), [MemoryGuard 로그](../evidence/oom-128-20261009-113259/app.log) ([출력 해설](evidence-reading-guide.md#2-oom-변경-전-128mb)).
 
 ### Q11. RSS와 Heap 값이 왜 다르며, 누수 위치도 찾았나요?
 
@@ -88,7 +88,7 @@
 
 **답변의 핵심:** 앱이 Memory limit exceeded와 Self-terminating을 기록했습니다. 부팅 실패가 아니라 작업 중 한도 초과에 따른 MemoryGuard 보호 종료로 판단했습니다.
 
-**증거:** [128MB 로그](../evidence/oom-128-20261009-113259/app.log), [256MB 로그](../evidence/oom-256-20261009-113740/app.log).
+**증거:** [128MB 로그](../evidence/oom-128-20261009-113259/app.log) ([출력 해설](evidence-reading-guide.md#2-oom-변경-전-128mb)), [256MB 로그](../evidence/oom-256-20261009-113740/app.log) ([출력 해설](evidence-reading-guide.md#3-oom-변경-후-256mb)).
 
 **구분:** 128MB를 정확히 찍지 않고 150MB에서 종료한 것은 25MB 단위 증가와 맞습니다. 한도와 최대 RSS를 같은 지표로 취급하지 않습니다.
 
@@ -104,7 +104,7 @@
 
 **답변의 핵심:** 숫자만으로 발신자나 원인을 확정할 수 없습니다. 137과 143은 시그널 종료 규칙과 일치하지만 로그를 함께 봅니다. CPU After와 Deadlock의 143은 수동 정리 기록이 있습니다.
 
-**증거:** [CPU After 수동 종료](../evidence/cpu-40-pty-20261009-122044/cleanup.log), [Deadlock 수동 종료](../evidence/deadlock-true-20261009-125943/cleanup.log).
+**증거:** [CPU After 수동 종료](../evidence/cpu-40-pty-20261009-122044/cleanup.log) ([출력 해설](evidence-reading-guide.md#6-cpu-변경-후-40-설정)), [Deadlock 수동 종료](../evidence/deadlock-true-20261009-125943/cleanup.log) ([출력 해설](evidence-reading-guide.md#7-deadlock-변경-전-true)).
 
 ## 4. CPU 장애
 
@@ -112,19 +112,19 @@
 
 **답변의 핵심:** ps는 실행 이후 평균이고 top은 갱신 구간 값이어서 다를 수 있습니다. 앱 내부 Current Load도 별개입니다. 지표 이름·기간을 붙여 설명합니다.
 
-**증거:** [After ps](../evidence/cpu-40-pty-20261009-122044/ps-check.txt), [After top](../evidence/cpu-40-pty-20261009-122044/top.log).
+**증거:** [After ps](../evidence/cpu-40-pty-20261009-122044/ps-check.txt) ([출력 해설](evidence-reading-guide.md#6-cpu-변경-후-40-설정)), [After top](../evidence/cpu-40-pty-20261009-122044/top.log) ([출력 해설](evidence-reading-guide.md#6-cpu-변경-후-40-설정)).
 
 ### Q16. 설정이 80인데 왜 53.11에서 종료됐나요?
 
 **답변의 핵심:** 정확한 내부 보호 임계치 구현은 확인하지 않았습니다. 환경변수를 OS 사용률 80%의 종료 기준으로 단정하지 않고, 실제 내부 값과 Watchdog 로그를 보고 종료를 판단했습니다.
 
-**증거:** [Before 로그](../evidence/cpu-80-pty-20261009-115744/app.log).
+**증거:** [Before 로그](../evidence/cpu-80-pty-20261009-115744/app.log) ([출력 해설](evidence-reading-guide.md#5-cpu-변경-전-80-설정)).
 
 ### Q17. 왜 0.1초 간격과 첫 화면 제외를 사용했나요?
 
 **답변의 핵심:** 초기 1초 관측은 짧은 버스트와 종료 직전 구간을 충분히 포착하지 못했습니다. 더 짧게 재수집하고 최초 화면을 이후 갱신 구간과 구분했습니다. 시작·끝·표본 수를 함께 확인했습니다.
 
-**증거:** [초기 top](../evidence/cpu-80-20261009-114729/top.log), [추가 top](../evidence/cpu-80-pty-20261009-115744/top.log).
+**증거:** [초기 top](../evidence/cpu-80-20261009-114729/top.log) ([출력 해설](evidence-reading-guide.md#4-cpu-최초-수집-관제-한계-확인)), [추가 top](../evidence/cpu-80-pty-20261009-115744/top.log) ([출력 해설](evidence-reading-guide.md#5-cpu-변경-전-80-설정)).
 
 **구분:** 최대값은 지속 사용률이 아닙니다. 같은 관측법이어도 Before 341개, After 449개로 실제 표본 수가 달랐습니다. 관측하지 않은 시간은 0%로 채우지 않습니다.
 
@@ -148,13 +148,13 @@
 
 **답변의 핵심:** PID 존재는 종료되지 않았다는 뜻입니다. 서로의 락을 기다리는 마지막 로그와, 이후에도 로그 크기·수정 시각이 변하지 않는 정체를 함께 봤습니다.
 
-**증거:** [true 스냅샷1](../evidence/deadlock-true-20261009-125943/snapshot-1.txt), [true 스냅샷2](../evidence/deadlock-true-20261009-125943/snapshot-2.txt).
+**증거:** [true 스냅샷1](../evidence/deadlock-true-20261009-125943/snapshot-1.txt) ([출력 해설](evidence-reading-guide.md#7-deadlock-변경-전-true)), [true 스냅샷2](../evidence/deadlock-true-20261009-125943/snapshot-2.txt) ([출력 해설](evidence-reading-guide.md#7-deadlock-변경-전-true)).
 
 ### Q21. 순환 대기를 직접 그려보세요.
 
 **답변의 핵심:** Thread-1은 Shared_Memory_A를 보유하며 Socket_Pool_B를 기다리고, Thread-2는 B를 보유하며 A를 기다립니다. T1→B→T2→A→T1의 고리가 만들어집니다.
 
-**증거:** [락 보유·WAITING 로그](../evidence/deadlock-true-20261009-125943/app.log).
+**증거:** [락 보유·WAITING 로그](../evidence/deadlock-true-20261009-125943/app.log) ([출력 해설](evidence-reading-guide.md#7-deadlock-변경-전-true)).
 
 **구분:** 두 Worker 이름을 TID 9297·9298 각각에 대응시키는 자료는 없습니다. 어느 TID가 어느 이름인지 확정하지 않습니다.
 
@@ -168,7 +168,7 @@
 
 **답변의 핵심:** 아닙니다. false에서도 3개 스레드가 관측됐습니다. 로그가 3,474→3,870바이트로 증가하고 작업이 진행된 것을 근거로 이번 교착 경로 회피를 확인했습니다. 메인 futex 대기는 정상 진행 중에도 남았습니다.
 
-**증거:** [false 스냅샷1](../evidence/deadlock-false-20261009-130309/snapshot-1.txt), [false 스냅샷2](../evidence/deadlock-false-20261009-130309/snapshot-2.txt).
+**증거:** [false 스냅샷1](../evidence/deadlock-false-20261009-130309/snapshot-1.txt) ([출력 해설](evidence-reading-guide.md#8-deadlock-변경-후-false)), [false 스냅샷2](../evidence/deadlock-false-20261009-130309/snapshot-2.txt) ([출력 해설](evidence-reading-guide.md#8-deadlock-변경-후-false)).
 
 **구분:** 같은 프로세스의 스레드별 RSS 행을 더해 전체 메모리라고 계산하지 않습니다. 증가한 RSS만으로 정상·누수 여부를 판정하지 않습니다.
 

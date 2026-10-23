@@ -1,5 +1,7 @@
 # [Bug] CPU Latency - 부하 증가 후 Watchdog 종료, CPU_MAX_OCCUPY=40으로 회피
 
+증거를 처음 읽는다면 [이 보고서의 증거 파일·출력 해설](../docs/evidence-reading-guide.md#5-cpu-변경-전-80-설정)을 먼저 보세요. 각 파일 링크 옆에 수집 이유와 출력 해석을 설명했습니다.
+
 실험일: 2026-10-09 KST · 환경: Ubuntu 26.04.1 LTS / WSL2 / x86_64
 
 ## 1. Description (현상 설명)
@@ -73,7 +75,7 @@ PID  PPID ELAPSED %CPU %MEM RSS    NLWP STAT
 
 직접 파일로 출력한 초기 로그에는 Watchdog 문구가 없었지만, PTY로 재수집하자 SIGTERM 문구까지 확인됐습니다. Python 표준 출력의 터미널·파일 버퍼링 방식 차이와 일치하는 결과입니다. 버퍼링만이 유일한 원인이었다고 확정하지는 않았습니다. [Python 출력 설명](https://docs.python.org/3/library/sys.html#sys.stdout)
 
-원본: [Before 로그](../evidence/cpu-80-pty-20261009-115744/app.log), [Before top](../evidence/cpu-80-pty-20261009-115744/top.log), [After 로그](../evidence/cpu-40-pty-20261009-122044/app.log), [After top](../evidence/cpu-40-pty-20261009-122044/top.log), [After 생존 확인](../evidence/cpu-40-pty-20261009-122044/ps-check.txt).
+원본: [Before 로그](../evidence/cpu-80-pty-20261009-115744/app.log) ([출력 해설](../docs/evidence-reading-guide.md#5-cpu-변경-전-80-설정)), [Before top](../evidence/cpu-80-pty-20261009-115744/top.log) ([출력 해설](../docs/evidence-reading-guide.md#5-cpu-변경-전-80-설정)), [After 로그](../evidence/cpu-40-pty-20261009-122044/app.log) ([출력 해설](../docs/evidence-reading-guide.md#6-cpu-변경-후-40-설정)), [After top](../evidence/cpu-40-pty-20261009-122044/top.log) ([출력 해설](../docs/evidence-reading-guide.md#6-cpu-변경-후-40-설정)), [After 생존 확인](../evidence/cpu-40-pty-20261009-122044/ps-check.txt) ([출력 해설](../docs/evidence-reading-guide.md#6-cpu-변경-후-40-설정)).
 
 ## 3. Root Cause Analysis (원인 분석)
 
