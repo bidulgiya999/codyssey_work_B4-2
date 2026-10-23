@@ -2,6 +2,8 @@
 
 작성일: 2026-10-23. 기준 자료: 이 저장소의 2026-10-09 실험. 이 문서는 교안을 바탕으로 발표를 준비하는 자료이며 새 실습 완료를 뜻하지 않습니다. 실제로 이해하고 확인한 범위에 맞춰 표현을 조정합니다.
 
+**출력 화면 읽기:** 아래 회색 코드 블록은 원본 파일에 보존된 실제 출력 또는 저장 파일 내용입니다. 입력할 명령이 아닙니다. 새로 실행하거나 화면을 합성하지 않았습니다. CRLF 줄바꿈을 화면 표시용 LF로 정규화했으며, 발췌 범위와 원본 링크를 표시했습니다. 새 실습에서는 시각·PID·수치가 달라질 수 있습니다.
+
 ## 1. 이 자료를 사용하는 방법과 전체 순서
 
 발표는 약 10~15분을 기준으로 구성했습니다. 평가 시간이 짧으면 각 절의 **발표할 말**을 중심으로 설명하고, 질문을 받으면 출력 해설과 예상 질문을 사용합니다. 모든 로그를 처음부터 끝까지 읽기보다 결론을 뒷받침하는 구간을 보여줍니다.
@@ -86,6 +88,65 @@ UID는 사용자의 숫자 식별자, root는 관리자 계정, x86_64는 CPU �
 
 아닙니다. 준비 조건을 통과했다는 의미입니다. 실행 후의 메모리 증가, CPU 부하, 교착 여부는 별도의 관제가 필요합니다.
 
+
+### 출력 화면 3-1. 실행 환경을 확인한 실제 기록
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09T13:08:15+09:00
+Linux HP 6.18.40.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Fri Jul 31 22:12:15 UTC 2026 x86_64 GNU/Linux
+uid=1000(jae0608) gid=1000(jae0608) groups=1000(jae0608),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users)
+PRETTY_NAME="Ubuntu 26.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="26.04"
+VERSION="26.04.1 LTS (Resolute Raccoon)"
+VERSION_CODENAME=resolute
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=resolute
+LOGO=ubuntu-logo
+14
+               total        used        free      shared  buff/cache   available
+Mem:           7.5Gi       553Mi       6.7Gi       4.1Mi       345Mi       6.9Gi
+Swap:          2.0Gi          0B       2.0Gi
+```
+
+원본: [environment.txt](../evidence/environment.txt#L1-L20). date·uname·id·os-release·nproc·free의 결과를 한 파일에 모은 기록입니다. nproc 결과인14는 이어지는 free 표와 다른 출력입니다.
+
+**화면 해설:** `uid=1000(jae0608)`는 사용자 번호와 이름이며, `x86_64`는 아키텍처입니다. `Mem: 7.5Gi`는 이 WSL 환경이 보는 물리 메모리 총량입니다. `available 6.9Gi`는 당시 가용량이며 모든 실험 시점의 메모리 상태를 뜻하지 않습니다.
+
+### 출력 화면 3-2. 앱 부팅 검사 통과
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'jae0608' (uid=1000)
+[2/6] Verifying Environment Variables     [OK]
+   ... All required Envs correct
+[3/6] Checking Required Files             [OK]
+   ... Verified 'secret.key' with correct key string.
+[4/6] Checking Port Availability          [OK]
+   ... Port 15034 is available.
+[5/6] Verifying Log Permission            [OK]
+   ... Log directory is writable: /home/jae0608/jae-test/logs
+[6/6] Verifying Mission Environment       [OK]
+   ... MEMORY_LIMIT=128MB, CPU_MAX_OCCUPY=100%, MULTI_THREAD_ENABLE=False
+------------------------------------------------------------
+All Boot Checks Passed!
+Agent READY
+```
+
+원본: [app.log](../evidence/oom-128-20261009-113259/app.log#L1-L16). 준비 명령의 효과를 앱이 검사한 결과입니다.
+
+**화면 해설:** `[1/6]~[6/6]`은 여섯 가지 부팅 검사 순서입니다. `[OK]`와 `Agent READY`는 실행 전 조건을 통과했다는 의미입니다. 이후 작업의 안정성까지 보장하지 않습니다.
+
 ## 4. 관제 방법: 어떤 프로세스를 어떻게 기록했는가
 
 **열 화면:** [monitor.sh](../scripts/monitor.sh), [OOM 작업 PID962의 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv).
@@ -114,6 +175,35 @@ OOM128 자료의 마지막 구간에서 작업 PID는962, 부모는954, 경과 �
 **예상 질문: RSS는 앱의 Current Heap과 같나요?**
 
 RSS는 OS가 관측한 실제 상주량이고 Current Heap은 앱 내부 로그 값입니다. 전체 메모리 범위와 측정 시각이 다르므로 같은 숫자로 취급하지 않습니다.
+
+
+### 출력 화면 4-1. monitor.sh가 저장한 작업 프로세스 CSV
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+timestamp,pid,ppid,elapsed_s,cpu_avg_pct,mem_pct,rss_kib,threads,state
+2026-10-09T11:33:01+09:00,962,954,1,2.0,0.2,18356,1,SN
+2026-10-09T11:33:02+09:00,962,954,2,2.0,0.5,43960,1,SN
+2026-10-09T11:33:03+09:00,962,954,3,1.5,0.5,43960,1,SN
+2026-10-09T11:33:04+09:00,962,954,4,1.2,0.5,43960,1,SN
+2026-10-09T11:33:05+09:00,962,954,5,1.1,0.8,69564,1,SN
+2026-10-09T11:33:06+09:00,962,954,6,1.0,0.8,69564,1,SN
+2026-10-09T11:33:07+09:00,962,954,8,0.8,0.8,69564,1,SN
+2026-10-09T11:33:08+09:00,962,954,9,1.1,1.2,95168,1,SN
+2026-10-09T11:33:09+09:00,962,954,10,0.9,1.2,95168,1,SN
+2026-10-09T11:33:10+09:00,962,954,11,0.9,1.2,95168,1,SN
+2026-10-09T11:33:11+09:00,962,954,12,0.9,1.5,120772,1,SN
+2026-10-09T11:33:12+09:00,962,954,13,0.9,1.5,120772,1,SN
+2026-10-09T11:33:13+09:00,962,954,14,0.8,1.5,120772,1,SN
+2026-10-09T11:33:14+09:00,962,954,15,0.9,1.8,146376,1,SN
+2026-10-09T11:33:16+09:00,962,954,16,0.8,1.8,146376,1,SN
+2026-10-09T11:33:17+09:00,962,954,17,0.8,1.8,146376,1,SN
+```
+
+원본: [monitor-962.csv](../evidence/oom-128-20261009-113259/monitor-962.csv#L1-L17). 각 줄은 같은 PID의 다른 측정 시각입니다.
+
+**화면 해설:** 처음 RSS18356에서 마지막146376KiB까지 증가하는 열을 따라 읽습니다. `elapsed_s`가 커지는 동안 CPU 평균은 낮지만 메모리는 증가했습니다. 메모리와CPU를 별개 지표로 읽어야 하는 이유입니다. 부모PID954와 작업PID962를 혼동하지 않습니다.
 
 ## 5. 설정값: 왜 이 조합을 사용했는가
 
@@ -145,6 +235,34 @@ RSS는 OS가 관측한 실제 상주량이고 Current Heap은 앱 내부 로그 
 **용어 설명**
 
 통제 변수는 고정한 조건, 변경 변수는 실험에서 바꾼 조건, 결과 지표는 생존 시간·RSS·CPU·로그 진행 등입니다. Before와After는 변경 전후의 별도 실행입니다.
+
+
+### 출력 화면 5-1. OOM 변경 전 저장 설정
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+MEMORY_LIMIT=128
+CPU_MAX_OCCUPY=100
+MULTI_THREAD_ENABLE=false
+```
+
+원본: [settings.txt](../evidence/oom-128-20261009-113259/settings.txt#L1-L3). 
+
+
+### 출력 화면 5-2. OOM 변경 후 저장 설정
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+MEMORY_LIMIT=256
+CPU_MAX_OCCUPY=100
+MULTI_THREAD_ENABLE=false
+```
+
+원본: [settings.txt](../evidence/oom-256-20261009-113740/settings.txt#L1-L3). 
+
+**화면 해설:** 메모리128→256만 바뀌었고 CPU100과false는 유지됐습니다. 이 파일은 실행 전에 저장한 설정 내용이며, 적용 결과는 앞의 부팅 로그와도 대조합니다. 값을 저장했다는 사실과 앱이 그 값을 읽었다는 사실을 구분합니다.
 
 ## 6. OOM: 메모리 증가와 종료 원인을 설명하기
 
@@ -180,6 +298,49 @@ Windows 전체 사용률과 앱 보호 한도는 범위가 다릅니다. 이번 
 
 RSS와 내부 Heap은 다른 지표이고,1초 간격 표본은 마지막 할당 직후와 종료 사이를 놓칠 수 있습니다. CSV의 최대는 관측 최대이지 종료 순간 절대 최대가 아닙니다.
 
+
+### 출력 화면 6-1. 128MB 조건의 증가와 보호 종료
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09 11:33:01,997 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-10-09 11:33:05,029 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-10-09 11:33:08,063 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-10-09 11:33:11,096 [INFO] [MemoryWorker] Current Heap: 100MB
+2026-10-09 11:33:14,130 [INFO] [MemoryWorker] Current Heap: 125MB
+2026-10-09 11:33:17,169 [INFO] [MemoryWorker] Current Heap: 150MB
+2026-10-09 11:33:17,169 [CRITICAL] [MemoryGuard] Memory limit exceeded (150MB >= 128MB) / (Recommend Over 256MB)
+2026-10-09 11:33:17,169 [CRITICAL] [MemoryGuard] Self-terminating process 962 to prevent system instability.
+```
+
+원본: [app.log](../evidence/oom-128-20261009-113259/app.log#L30-L37). 
+
+
+### 출력 화면 6-2. 256MB 조건의 증가와 보호 종료
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09 11:37:42,837 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-10-09 11:37:45,870 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-10-09 11:37:48,907 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-10-09 11:37:51,940 [INFO] [MemoryWorker] Current Heap: 100MB
+2026-10-09 11:37:54,973 [INFO] [MemoryWorker] Current Heap: 125MB
+2026-10-09 11:37:58,006 [INFO] [MemoryWorker] Current Heap: 150MB
+2026-10-09 11:38:01,039 [INFO] [MemoryWorker] Current Heap: 175MB
+2026-10-09 11:38:04,071 [INFO] [MemoryWorker] Current Heap: 200MB
+2026-10-09 11:38:07,104 [INFO] [MemoryWorker] Current Heap: 225MB
+2026-10-09 11:38:10,138 [INFO] [MemoryWorker] Current Heap: 250MB
+2026-10-09 11:38:13,171 [INFO] [MemoryWorker] Current Heap: 275MB
+2026-10-09 11:38:13,172 [CRITICAL] [MemoryGuard] Memory limit exceeded (275MB >= 256MB) / (Recommend Over 256MB)
+2026-10-09 11:38:13,172 [CRITICAL] [MemoryGuard] Self-terminating process 1156 to prevent system instability.
+```
+
+원본: [app.log](../evidence/oom-256-20261009-113740/app.log#L30-L42). 
+
+**화면 해설:** 두 출력 모두 `[CRITICAL] [MemoryGuard]`를 확인합니다. `150MB >= 128MB`와 `275MB >= 256MB`는 앱 내부 한도 비교입니다. 마지막 `Self-terminating`이 앱의 자체 종료 요청을 설명합니다. 생존 시간은 이 블록의 첫25MB 로그가 아니라 보고서에서 정한 `Agent listening`부터 계산했습니다.
+
 ## 7. CPU: 부하 상승과 Watchdog 종료를 설명하기
 
 **열 화면:** [CPU 보고서](../reports/02-cpu.md) → [80 PTY 로그](../evidence/cpu-80-pty-20261009-115744/app.log) → [top 원본](../evidence/cpu-80-pty-20261009-115744/top.log) → [40 로그](../evidence/cpu-40-pty-20261009-122044/app.log).
@@ -213,6 +374,109 @@ CPU를 많이 사용하는 프로세스가 있으면 다른 실행 가능한 작
 **예상 질문: 종료 코드가 둘 다143인데 조치에 실패했나요?**
 
 Before는 Watchdog SIGTERM 로그가 있고 After는 수동 정리 기록이 있습니다.143이라는 숫자만으로 같은 종료 원인이라고 판단하지 않습니다.
+
+
+### 출력 화면 7-1. CPU80의 top 실제 한 화면
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+top - 11:58:11 up  1:15,  1 user,  load average: 0.00, 0.01, 0.01
+Tasks:   2 total,   0 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  3.5 ni, 96.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7639.0 total,   6903.2 free,    573.4 used,    324.7 buff/cache     
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   7065.7 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   1921 jae0608   30  10   24404  18452  10112 S  50.0   0.2   0:00.29 agent-leak-app
+   1920 jae0608   20   0    3000   2244   2024 S   0.0   0.0   0:00.06 agent-leak-app
+
+```
+
+원본: [top.log](../evidence/cpu-80-pty-20261009-115744/top.log#L2481-L2490). 최초 프레임을 제외한 관측 최대50.0%가 나타나는 프레임 중 첫 번째를 발췌했습니다. 시간은11:58:11입니다.
+
+**화면 해설:** PID1921 행의 `%CPU 50.0`이 작업 프로세스의 구간 사용률입니다. PID1920은 실행기입니다. 위의 `%Cpu(s)`는 시스템 전체 요약이므로 같은 값일 필요가 없습니다. 현재 상태S는 표본 순간 수면 중이라는 뜻이며, 직전 구간에 CPU를 사용했다는50%와 모순되지 않습니다. `Tasks: 2`는 PID 필터가 적용된 화면의 작업 수로 읽습니다.
+
+### 출력 화면 7-2. CPU80의 Watchdog 종료
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09 11:58:17,438 [INFO] [CpuWorker] Current Load: 48.93%
+2026-10-09 11:58:20,549 [INFO] [CpuWorker] Current Load: 53.11%
+2026-10-09 11:58:20,649 [CRITICAL] [CpuWorker] CPU Threshold Violated! (53.11%).
+
+>>> [SYSTEM] WATCHDOG: INITIATING EMERGENCY ABORT (SIGTERM) <<<
+
+
+Script done on 2026-10-09 11:58:20+09:00 [COMMAND_EXIT_CODE="143"]
+```
+
+원본: [app.log](../evidence/cpu-80-pty-20261009-115744/app.log#L42-L49). 
+
+**화면 해설:** 위 top 화면과 종료 로그는 서로 다른 시각입니다. `Current Load: 53.11%`는 앱 내부 값이고, `WATCHDOG ... (SIGTERM)`은 보호 종료 요청입니다. `Script done`은 기록 세션 종료 표지이며 `COMMAND_EXIT_CODE="143"`은 script가 기록한 실행 명령의 종료 상태입니다.
+
+### 출력 화면 7-3. CPU40의 top 실제 한 화면
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+top - 12:21:06 up  1:38,  1 user,  load average: 0.04, 0.04, 0.00
+Tasks:   2 total,   0 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  2.1 ni, 97.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7639.0 total,   6750.5 free,    725.6 used,    325.3 buff/cache     
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6913.4 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   2359 jae0608   30  10  351096 197776  10124 S  40.0   2.5   0:00.35 agent-leak-app
+   2358 jae0608   20   0    3000   2248   2020 S   0.0   0.0   0:00.07 agent-leak-app
+
+```
+
+원본: [top.log](../evidence/cpu-40-pty-20261009-122044/top.log#L1941-L1950). 최초 프레임을 제외한 관측 최대40.0%가 나타나는 프레임 중 첫 번째입니다.
+
+
+### 출력 화면 7-4. CPU40 도달 후 냉각 구간
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09 12:21:06,415 [INFO] [CpuWorker] Current Load: 38.47%
+2026-10-09 12:21:08,526 [INFO] [CpuWorker] Peak reached (40.00%). Starting cooldown...
+2026-10-09 12:21:08,953 [INFO] [MemoryWorker] Current Heap: 200MB
+2026-10-09 12:21:09,526 [INFO] [CpuWorker] Current Load: 40.00%
+2026-10-09 12:21:11,987 [INFO] [MemoryWorker] Current Heap: 225MB
+2026-10-09 12:21:12,642 [INFO] [CpuWorker] Current Load: 32.54%
+```
+
+원본: [app.log](../evidence/cpu-40-pty-20261009-122044/app.log#L68-L73). 
+
+
+### 출력 화면 7-5. 냉각 완료와 재상승 시작
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09 12:21:33,450 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-10-09 12:21:34,456 [INFO] [CpuWorker] Current Load: 5.00%
+```
+
+원본: [app.log](../evidence/cpu-40-pty-20261009-122044/app.log#L87-L88). 
+
+
+### 출력 화면 7-6. 경과55초 시점의 생존 확인
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+    PID    PPID ELAPSED %CPU %MEM   RSS NLWP STAT
+   2358    2356      55  0.1  0.0  2248    1 Ss+
+   2359    2358      55  1.4  6.1 479420   3 SNl+
+```
+
+원본: [ps-check.txt](../evidence/cpu-40-pty-20261009-122044/ps-check.txt#L1-L3). 
+
+**화면 해설:** `Peak reached` 뒤 `Starting cooldown`이 부하를 낮추는 전환이며, `Cooldown complete (5.00%)`는 냉각 후 재상승을 시작한 로그입니다. ps의 `ELAPSED 55`는 해당 프로세스 경과 시간이고 PID2359가 남아 있습니다. `%CPU 1.4`는 누적 평균으로 top 구간 최대40.0%와 다를 수 있습니다. `RSS 479420`도 그 시각의 메모리이며 top12:21:06 화면과 측정 시각이 다릅니다.
 
 ## 8. Deadlock: 살아 있지만 진행하지 않는 상태 설명하기
 
@@ -258,6 +522,104 @@ Before는 Watchdog SIGTERM 로그가 있고 After는 수동 정리 기록이 있
 
 모든 경로에서 A다음B처럼 락 획득 순서를 통일하는 방안을 제안합니다. 중첩 락 축소, 타임아웃과 롤백, 예외 시 해제 보장도 검토할 수 있습니다. 실제 구현 수정과 검증은 소스 접근이 가능한 별도 작업입니다.
 
+
+### 출력 화면 8-1. true 첫 관측: PID와 스레드 대기
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09T12:59:55+09:00
+jae0608     9223     437  0 12:59 pts/0    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/jae-test/evidence/deadlock-true-20261009-125943/app.log
+jae0608     9225    9223  0 12:59 pts/2    00:00:00 ./agent-leak-app
+jae0608     9226    9225  0 12:59 pts/2    00:00:00 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+   9226    9226  0.3 18512 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+   9226    9297  0.0 18512 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+   9226    9298  0.0 18512 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+log_bytes=2792 modified=2026-10-09 12:59:52.286312863 +0900
+```
+
+원본: [snapshot-1.txt](../evidence/deadlock-true-20261009-125943/snapshot-1.txt#L1-L9). 
+
+
+### 출력 화면 8-2. true 10초 후 재관측
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09T13:00:05+09:00
+jae0608     9223     437  0 12:59 pts/0    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/jae-test/evidence/deadlock-true-20261009-125943/app.log
+jae0608     9225    9223  0 12:59 pts/2    00:00:00 ./agent-leak-app
+jae0608     9226    9225  0 12:59 pts/2    00:00:00 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+   9226    9226  0.1 18512 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+   9226    9297  0.0 18512 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+   9226    9298  0.0 18512 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+log_bytes=2792 modified=2026-10-09 12:59:52.286312863 +0900
+```
+
+원본: [snapshot-2.txt](../evidence/deadlock-true-20261009-125943/snapshot-2.txt#L1-L9). 
+
+**화면 해설:** 같은 PID9226과 세TID가 존재합니다. 두 화면의RSS18512, 로그크기2792, 수정시각이 같습니다. CPU0.3→0.1은 ps의 누적 평균 변화일 수 있으며, 이를 작업 재개로 해석하지 않습니다. `SNl+`의 `l`은 멀티스레드, `+`는 터미널 전경 프로세스 그룹에 속한다는 뜻입니다.
+
+### 출력 화면 8-3. 서로의 자원을 기다리는 마지막 로그
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09 12:59:50,274 [INFO] [AgentWorker][Worker-Thread-1] LOCK ACQUIRED: [Shared_Memory_A]. (Holding...)
+2026-10-09 12:59:50,275 [INFO] [AgentWorker][Worker-Thread-2] LOCK ACQUIRED: [Socket_Pool_B]. (Holding...)
+2026-10-09 12:59:50,275 [INFO] [AgentWorker][Worker-Thread-1] Processing critical data in Memory A...
+2026-10-09 12:59:50,275 [INFO] [AgentWorker][Worker-Thread-2] Establishing network connections in Pool B...
+2026-10-09 12:59:52,284 [INFO] [AgentWorker][Worker-Thread-2] Need resource [Shared_Memory_A] to write logs.
+2026-10-09 12:59:52,284 [INFO] [AgentWorker][Worker-Thread-2] WAITING for [Shared_Memory_A]... (Status: BLOCKED)
+2026-10-09 12:59:52,286 [INFO] [AgentWorker][Worker-Thread-1] Need resource [Socket_Pool_B] to finish job.
+2026-10-09 12:59:52,286 [INFO] [AgentWorker][Worker-Thread-1] WAITING for [Socket_Pool_B]... (Status: BLOCKED)
+```
+
+원본: [snapshot-1.txt](../evidence/deadlock-true-20261009-125943/snapshot-1.txt#L22-L29). 
+
+**화면 해설:** T1이A를 보유하고 T2가B를 보유한 뒤 T2는A, T1은B를 기다립니다. `Holding`은 보유 상태, `WAITING`과`BLOCKED`는 추가 자원을 기다리는 상태라는 앱의 설명입니다. 스레드 대기 위치만으로 단정하지 않고 이 자원 관계를 함께 읽습니다.
+
+### 출력 화면 8-4. false 첫 관측: 같은 형식으로 비교
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09T13:03:21+09:00
+jae0608    11291     437  0 13:03 pts/0    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/jae-test/evidence/deadlock-false-20261009-130309/app.log
+jae0608    11293   11291  0 13:03 pts/2    00:00:00 ./agent-leak-app
+jae0608    11294   11293  1 13:03 pts/2    00:00:00 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+  11294   11294  0.3 121000 00:00:00 SNl+ futex_do_wait                   agent-leak-app
+  11294   11314  0.6 121000 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+  11294   11315  0.4 121000 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+log_bytes=3474 modified=2026-10-09 13:03:21.368107854 +0900
+```
+
+원본: [snapshot-1.txt](../evidence/deadlock-false-20261009-130309/snapshot-1.txt#L1-L9). 
+
+
+### 출력 화면 8-5. false 10초 후 재관측
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09T13:03:31+09:00
+jae0608    11291     437  0 13:03 pts/0    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/jae-test/evidence/deadlock-false-20261009-130309/app.log
+jae0608    11293   11291  0 13:03 pts/2    00:00:00 ./agent-leak-app
+jae0608    11294   11293  1 13:03 pts/2    00:00:00 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+  11294   11294  0.2 197812 00:00:00 SNl+ futex_do_wait                   agent-leak-app
+  11294   11314  0.5 197812 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+  11294   11315  0.7 197812 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+log_bytes=3870 modified=2026-10-09 13:03:30.720105197 +0900
+```
+
+원본: [snapshot-2.txt](../evidence/deadlock-false-20261009-130309/snapshot-2.txt#L1-L9). 
+
+**화면 해설:** 로그3474→3870바이트, RSS121000→197812KiB로 달라집니다. 메인 스레드는futex대기지만 워커는poll대기이며 작업 로그도 진행합니다. 여러 값이 바뀐다는 사실만으로 정상이라고 단정하지 않고 작업 진행 로그와 함께 회피를 확인했습니다. 같은 PID의RSS를 세 행만큼 더하지 않습니다.
+
 ## 9. 종료 코드와 정리: 자동 종료와 수동 종료 구분하기
 
 **열 화면:** [CPU40 정리 로그](../evidence/cpu-40-pty-20261009-122044/cleanup.log), [Deadlock true 정리 로그](../evidence/deadlock-true-20261009-125943/cleanup.log), 각 폴더의 exit-code.txt와 종료 후 ps.
@@ -275,6 +637,53 @@ Before는 Watchdog SIGTERM 로그가 있고 After는 수동 정리 기록이 있
 **용어 설명**
 
 시그널은 프로세스에 전달하는 알림·요청입니다. SIGTERM은 종료 요청, SIGKILL은 강제 종료 시그널입니다. 종료 코드137이 커널 OOM 발생의 단독 증거는 아닙니다.
+
+
+### 출력 화면 9-1. OOM128 종료 상태 파일
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+137
+```
+
+원본: [exit-code.txt](../evidence/oom-128-20261009-113259/exit-code.txt#L1-L1). 
+
+
+### 출력 화면 9-2. CPU80 PTY 종료 상태 파일
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+143
+```
+
+원본: [exit-code.txt](../evidence/cpu-80-pty-20261009-115744/exit-code.txt#L1-L1). 
+
+
+### 출력 화면 9-3. CPU40 실험자의 정리 기록
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+2026-10-09T12:46:44+09:00 manual SIGTERM PID=2358
+2026-10-09T12:46:44+09:00 manual SIGTERM PID=2359
+```
+
+원본: [cleanup.log](../evidence/cpu-40-pty-20261009-122044/cleanup.log#L1-L2). 
+
+
+### 출력 화면 9-4. 정리 후 ps에는 제목만 남음
+
+**2026-10-09 실제 기록 발췌 — 입력할 명령이 아닙니다.**
+
+```text
+    PID    PPID ELAPSED %CPU %MEM   RSS NLWP STAT
+```
+
+원본: [ps-after-cleanup.txt](../evidence/cpu-40-pty-20261009-122044/ps-after-cleanup.txt#L1-L1). 
+
+**화면 해설:** 위137과143은 서로 다른 실행의 파일입니다. CPU40의 `manual SIGTERM`은 실험자가 정리를 위해 보낸 요청입니다. 정리 후 제목만 있는ps 출력은 조회 대상 행이 없다는 뜻입니다. 수동 정리 기록이12:46:44라고 해서 앞의55초 관측부터 그때까지 연속 안정성을 입증한 것으로 확대하지 않습니다.
 
 ## 10. 보고서와 분석 한계: 동료가 확인할 수 있게 정리하기
 
