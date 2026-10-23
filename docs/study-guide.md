@@ -1,0 +1,387 @@
+# B4-2 단계별 학습 교안: 명령에서 증거와 설명까지
+
+작성일: 2026-10-23 · 대상: OOM Crash / CPU Latency / Deadlock 장애 분석 과제
+
+이 교안의 목표는 명령어를 복사하는 데서 끝나지 않고, **실행 목적 → 관측 결과 → 원인 판단 → 조치와 검증**을 본인 말로 설명하는 것입니다. SSH·방화벽·역할별 계정·cron을 구축하는 별도 과제와 구분합니다.
+
+여기에 적힌 측정 수치는 저장소의 **2026-10-09 원본 실험**에서 가져왔습니다. 새 재실습의 완료나 이해도를 증명하는 문서는 아닙니다. 다시 실행한 시각·PID·수치는 [실습 기록 양식](../templates/learning-record-template.md)에 별도로 기록합니다. 기존 PDF는 원래 실험 보고서이며 이 새 교안까지 포함한 PDF로 갱신한 것은 아닙니다.
+
+## 0. 사용하는 방법
+
+1. 한 단계의 명령을 읽고, 실행하기 전에 목적과 예상 결과를 말합니다.
+2. **입력할 명령**만 입력합니다. `예전 실제 출력`은 비교 자료이며 입력하지 않습니다.
+3. 자신의 출력을 기록하고 정상·이상·판단 보류 중 하나를 선택합니다.
+4. 원본 증거 또는 자신의 새 증거를 열어 판단 이유를 설명합니다.
+5. 설명이 어려우면 해당 단계부터 다시 읽습니다. 이해하지 못한 항목은 미확인으로 남깁니다.
+
+프로그램을 실행하는 단계는 출력 확인을 받으며 진행합니다. 아래 일부 코드는 살아 있는 PID와 이미 준비한 경로를 전제로 하는 **구문 해설**입니다. 문서 전체를 한 번에 실행하는 스크립트가 아닙니다. 과거 명령 전체의 해설은 [명령어 상세 기록](command-guide.md)을 함께 봅니다.
+
+| 순서 | 학습 주제 | 완료 기준 |
+|---|---|---|
+| 1 | 과제와 실행 환경 | Windows·Ubuntu, 일반 사용자·root를 구분 |
+| 2 | 파일과 권한 | CPU에 맞는 실행 파일과 실행 권한 설명 |
+| 3 | 환경변수와 부팅 조건 | 설정 저장·적용·자식 전달의 차이 설명 |
+| 4 | 증거와 프로세스 관계 | 실행별 폴더와 부모·자식 PID를 추적 |
+| 5 | 관제 스크립트 | CSV 각 열과 수집 종료 조건 설명 |
+| 6 | 메모리 장애 | RSS 상승과 MemoryGuard 종료를 연결 |
+| 7 | 메모리 비교 | 한도 상향을 임시 조치로 설명 |
+| 8 | CPU 장애 | 평균·구간·앱 내부 지표를 구분 |
+| 9 | CPU 비교 | 냉각 동작과 수동 종료를 구분 |
+| 10 | 교착 진단 | PID 존재와 실제 진행을 구분 |
+| 11 | 교착 회피 | 설정 변경 후 작업 진행을 입증 |
+| 12 | 보고와 평가 | 결론마다 증거와 한계를 제시 |
+
+## 1. Ubuntu에 접속하고 실행 계정 확인
+
+**입력할 명령 — Windows PowerShell**
+
+```powershell
+wsl -d Ubuntu
+```
+
+Ubuntu를 시작하는 명령입니다. Ubuntu가 이미 설치돼 있다면 재설치할 필요는 없습니다. `PS C:\...>`는 PowerShell, `jae0608@HP:~$`는 Ubuntu 셸의 프롬프트입니다. 프롬프트 자체는 입력하지 않습니다. [Microsoft WSL 명령 문서](https://learn.microsoft.com/en-us/windows/wsl/basic-commands)
+
+**입력할 명령 — Ubuntu**
+
+```bash
+cd ~
+pwd
+whoami
+id -u
+uname -r
+uname -m
+```
+
+| 명령 | 왜 사용하는가 | 예전 실제 결과와 의미 |
+|---|---|---|
+| `cd ~` | 사용자 홈으로 이동 | 성공 시 보통 출력 없음 |
+| `pwd` | 현재 위치 확인 | 홈 경로 `/home/jae0608` |
+| `whoami` | 실행 계정 확인 | `jae0608` |
+| `id -u` | root인지 확인 | `1000`, root의 UID 0이 아님 |
+| `uname -r` | 커널 확인 | `6.18.40.1-microsoft-standard-WSL2` |
+| `uname -m` | CPU 아키텍처 확인 | `x86_64` |
+
+**판단:** 과제의 일반 사용자 실행 조건을 확인하고 파일 선택의 기준을 확보했습니다. 새 실행 결과가 다르면 그 값을 기록합니다. [환경 원본](../evidence/environment.txt)
+
+**설명 연습:** “실행 전에 계정과 CPU 종류를 확인한 이유는 무엇인가?”
+
+## 2. 파일 선택, 작업 폴더, 실행 권한
+
+**입력할 명령 — Ubuntu, 파일 형식 조회**
+
+```bash
+file /mnt/c/Users/1234v/Downloads/agent-app-leak/agent-leak-app-*
+```
+
+`file`은 파일 형식을 조회하며 디컴파일 명령이 아닙니다. `ELF 64-bit ... x86-64`는 Linux x86-64용, `ARM aarch64`는 ARM용입니다. 예전 환경은 x86_64여서 x86 파일을 선택했습니다. 파일 이름만이 아니라 실제 형식과 컴퓨터 아키텍처를 비교합니다.
+
+새 학습 경로는 과거 `~/jae-test`와 구분한 `~/agent-b42-study`를 사용합니다. 아래 복사는 **아키텍처가 x86_64임을 확인한 경우**입니다.
+
+**입력할 명령 — Ubuntu**
+
+```bash
+mkdir -p ~/agent-b42-study
+cp /mnt/c/Users/1234v/Downloads/agent-app-leak/agent-leak-app-x86 ~/agent-b42-study/agent-leak-app
+chmod u+x ~/agent-b42-study/agent-leak-app
+ls -lh ~/agent-b42-study/agent-leak-app
+```
+
+| 구문 | 목적 |
+|---|---|
+| `/mnt/c` | Ubuntu에서 Windows C드라이브에 접근 |
+| `mkdir -p` | 필요한 폴더 생성, 기존 폴더는 유지 |
+| `cp 원본 대상` | 원본을 보존하고 실습 복사본 준비 |
+| `chmod u+x` | 소유자에게 실행 권한 추가 |
+| `ls -lh` | 권한·소유자·크기를 확인 |
+
+**출력 읽기:** `-rwxr-xr-x`의 첫 `-`는 일반 파일, 다음 `rwx`는 소유자의 읽기·쓰기·실행 권한입니다. 실행 권한이 있다고 부팅 조건까지 통과한 것은 아닙니다.
+
+**자주 생기는 혼동:** `pwd`가 출력한 경로를 그대로 입력하면 Bash는 그 경로를 실행하려 합니다. 폴더라면 `Is a directory`가 나올 수 있습니다. 이동은 `cd 경로`, 내용 조회는 `ls 경로`입니다.
+
+## 3. 환경변수와 필수 파일 준비
+
+환경변수는 프로그램에 전달하는 설정입니다. 파일 저장, 현재 셸 적용, 자식 프로세스 전달을 구분합니다. 저장소의 [예전 env.sh](../scripts/env.sh)는 `~/jae-test` 경로이므로 새 학습에서는 다음 파일을 별도로 만듭니다.
+
+**입력할 명령 — Ubuntu**
+
+```bash
+cat > ~/agent-b42-study/env.sh <<'EOF'
+export AGENT_HOME="$HOME/agent-b42-study"
+export AGENT_PORT=15034
+export AGENT_UPLOAD_DIR="$AGENT_HOME/upload_files"
+export AGENT_KEY_PATH="$AGENT_HOME/api_keys"
+export AGENT_LOG_DIR="$AGENT_HOME/logs"
+export MEMORY_LIMIT=128
+export CPU_MAX_OCCUPY=100
+export MULTI_THREAD_ENABLE=false
+EOF
+source ~/agent-b42-study/env.sh
+mkdir -p "$AGENT_UPLOAD_DIR" "$AGENT_KEY_PATH" "$AGENT_LOG_DIR"
+printf '%s' 'agent_api_key_test' > "$AGENT_KEY_PATH/secret.key"
+chmod 600 "$AGENT_KEY_PATH/secret.key"
+```
+
+| 구문 | 왜 사용하는가 |
+|---|---|
+| `<<'EOF'` | 파일을 쓰는 시점에는 `$HOME` 등을 그대로 저장 |
+| `source` | 설정을 현재 셸에서 실행 |
+| `export` | 이후 실행할 자식 프로그램에 변수 전달 |
+| `printf '%s'` | 지정 문자열을 추가 줄바꿈 없이 기록 |
+| `>` | 파일 생성 또는 기존 내용 덮어쓰기 |
+| `chmod 600` | 소유자만 읽기·쓰기 허용 |
+
+**입력할 명령 — 적용 결과 조회**
+
+```bash
+printenv AGENT_HOME AGENT_PORT AGENT_UPLOAD_DIR AGENT_KEY_PATH AGENT_LOG_DIR MEMORY_LIMIT CPU_MAX_OCCUPY MULTI_THREAD_ENABLE
+ls -ld "$AGENT_UPLOAD_DIR" "$AGENT_KEY_PATH" "$AGENT_LOG_DIR"
+ls -l "$AGENT_KEY_PATH/secret.key"
+wc -c < "$AGENT_KEY_PATH/secret.key"
+ss -ltn 'sport = :15034'
+```
+
+키 파일은 지정 문자열이면 18바이트입니다. 크기만으로 내용 일치까지 증명할 수는 없습니다. `ss`는 대기 중인 TCP 소켓을 조회하며 제목만 나오면 조회 시점에 해당 포트의 리스너가 없다는 뜻입니다. 실제 바인딩 성공은 앱 실행으로 확인합니다.
+
+앱은 일반 사용자, 환경변수, 필수 파일, 포트, 로그 권한, 미션 환경의 **6단계 부팅 검사**를 수행했습니다. `All Boot Checks Passed! / Agent READY`와 이후 작업 로그를 함께 확인합니다. 권장값 WARNING은 부팅 실패와 구분합니다.
+
+**설명 연습:** “env.sh를 저장한 것과 source한 것은 어떻게 다른가? MEMORY_LIMIT은 Windows 전체 RAM 제한인가?”
+
+## 4. 실행별 증거와 PID 관계
+
+**입력할 명령 — 첫 OOM 실행의 기록 위치 준비**
+
+```bash
+RUN_DIR="$AGENT_HOME/evidence/oom-128-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$RUN_DIR"
+printf 'MEMORY_LIMIT=%s\nCPU_MAX_OCCUPY=%s\nMULTI_THREAD_ENABLE=%s\n' \
+  "$MEMORY_LIMIT" "$CPU_MAX_OCCUPY" "$MULTI_THREAD_ENABLE" > "$RUN_DIR/settings.txt"
+```
+
+`AGENT_HOME`은 실습 기준 경로, `RUN_DIR`은 실행 한 번의 증거 경로입니다. 새 폴더와 `settings.txt`가 실험 간 혼동을 줄입니다. 폴더 이름의 시각은 폴더 생성 시각이며 실제 앱 시작 시각과 다를 수 있습니다.
+
+다음은 **실행 구문 해설**입니다. 실제 실행은 관제 준비와 부모·자식 PID 수집을 함께 진행합니다. 아래 두 줄만 실행하고 오래 기다리면 종료 전 관측을 놓칠 수 있습니다.
+
+```bash
+./agent-leak-app > "$RUN_DIR/app.log" 2>&1 &
+APP_PID=$!
+```
+
+| 구문 | 의미 |
+|---|---|
+| `./` | 현재 폴더의 실행 파일 |
+| `> app.log` | 표준 출력 저장 |
+| `2>&1` | 오류 출력도 현재 표준 출력과 같은 곳으로 연결 |
+| `&` | 백그라운드 실행 |
+| `$!` | 직전 백그라운드 작업의 PID |
+
+부모만 관측하면 실제 작업 자식의 메모리 증가를 놓칠 수 있습니다. 실행 중에는 `pgrep -P "$APP_PID" -x agent-leak-app`으로 자식을 찾고 `ps`의 PPID로 관계를 검증합니다. PID 생성 전에 조회할 수도 있으므로 짧은 재시도가 필요할 수 있습니다.
+
+PTY 실행에서는 `$!`가 `script`의 PID이므로 `SESSION_PID`로 저장하고 앱 PID는 별도로 찾습니다. 재실습에서는 예전 숫자 PID를 복사해 사용하지 않습니다.
+
+## 5. monitor.sh를 설명할 수 있게 읽기
+
+사용한 소스는 [scripts/monitor.sh](../scripts/monitor.sh)입니다. 현재 폴더에 소스를 저장한 뒤 `chmod u+x monitor.sh`로 실행 권한을 주고 `bash -n monitor.sh`로 문법을 검사했습니다. 문법 통과는 실제 관제 성공까지 의미하지 않습니다.
+
+관제 실행 구문은 `./monitor.sh "$WORKER_PID" > "$RUN_DIR/monitor-$WORKER_PID.csv" 2> "$RUN_DIR/monitor-$WORKER_PID.log" &`입니다. 이때 `WORKER_PID`는 현재 살아 있는 작업 자식의 값이어야 합니다.
+
+| 소스의 부분 | 역할 |
+|---|---|
+| `LC_ALL=C` | 출력 형식 통일 |
+| `$#`, `$1` 검사 | 인자가 하나이며 양의 정수 형식인지 확인 |
+| `ps -p ... -o ...` | 해당 PID의 지정 필드 조회 |
+| 필드 뒤 `=` | ps 제목을 숨김 |
+| `awk` | 열을 쉼표로 연결하고 상태 Z 행 제외 |
+| `[[ -n "$row" ]] || break` | 유효 조회 행이 없으면 반복 종료 |
+| `date -Iseconds` | 실제 수집 시각 추가 |
+| `sleep 1` | 조회 사이에 1초 대기 |
+| `>&2` | 안내 메시지와 CSV 데이터를 분리 |
+
+| CSV 열 | 읽는 방법 |
+|---|---|
+| `pid / ppid` | 프로세스와 부모 식별 번호 |
+| `elapsed_s` | 프로세스 시작 후 경과 초 |
+| `cpu_avg_pct` | ps의 실행 이후 평균 CPU |
+| `mem_pct` | Linux 전체 물리 메모리 대비 RSS 비율 |
+| `rss_kib` | 물리 메모리에 상주하는 양, KiB |
+| `threads` | 스레드 수 |
+| `state` | R 실행 가능, S 대기, Z 좀비 및 부가 표시 |
+
+조회·파일 출력에도 시간이 걸려 정확히 매 1.000초는 아닙니다. Z는 실행이 끝났지만 종료 상태가 회수되지 않아 정보가 남은 상태여서 제외합니다. 안내에 “no longer running”이 나오더라도 조회 실패 등도 가능하므로 앱 로그와 별도 ps 결과로 종료를 확인합니다. [ps 매뉴얼](https://man7.org/linux/man-pages/man1/ps.1.html)
+
+## 6. 메모리: 전체 RAM과 앱 한도 구분
+
+프로세스의 가상 주소 공간에는 코드·정적 데이터·힙·스택 등이 있습니다. 동적 데이터 증가가 힙과 상주 메모리 증가로 나타날 수 있지만 앱의 Heap 값과 OS의 RSS는 같은 지표가 아닙니다. 주소 공간 전체 크기도 RSS와 다릅니다.
+
+| 구분 | 의미 | 이번 판단에서의 역할 |
+|---|---|---|
+| Windows 전체 메모리 비율 | 다른 앱과 WSL 등의 영향 포함 | 대상 하나의 원인을 확정할 수 없음 |
+| Linux 전체 RAM | WSL 안에서 보이는 물리 메모리 | ps의 메모리 비율 분모 |
+| `MEMORY_LIMIT` | 앱에 전달한 보호 설정 | MemoryGuard 종료 로그와 비교 |
+| `Current Heap` | 앱 내부 기록 | 앱이 보고한 증가와 초과 확인 |
+| RSS | 프로세스 상주 메모리 | OS 관측 증가 확인 |
+
+**예전 실제 출력 — 입력하지 않음**
+
+```text
+[MemoryWorker] Current Heap: 150MB
+[MemoryGuard] Memory limit exceeded (150MB >= 128MB)
+[MemoryGuard] Self-terminating process 962 to prevent system instability.
+```
+
+이 출력은 [원본 로그](../evidence/oom-128-20261009-113259/app.log)의 핵심 문구를 접두사 일부를 생략해 발췌한 것입니다. [관제 CSV](../evidence/oom-128-20261009-113259/monitor-962.csv)의 RSS는 18,356 → 146,376KiB로 증가했습니다. `MiB = KiB / 1024`입니다.
+
+**판단:** 앱의 한도 초과와 MemoryGuard 보호 종료를 확인했습니다. 커널 OOM Killer의 작동은 커널 로그 등 추가 증거 없이 확정하지 않습니다. 메모리 누수·데이터 보관 증가가 의심되지만 비공개 코드의 정확한 해제 누락 위치는 확인하지 않았습니다.
+
+메모리 부족은 일반적으로 페이지 회수·스왑·다른 프로세스의 자원 경쟁을 늘릴 수 있습니다. 이번 실험에서 시스템 전체 RAM 소진이나 그 지연량을 측정한 것은 아닙니다.
+
+## 7. 메모리 설정 비교와 임시 조치
+
+| 비교 항목 | Before | After |
+|---|---|---|
+| 메모리 / CPU / 동시 설정 | 128 / 100 / false | 256 / 100 / false |
+| 작업 PID | 962 | 1156 |
+| 로그 기준 생존 시간 | 17.202초 | 32.363초 |
+| 종료 시 앱 내부 값 | 150MB | 275MB |
+| 관측 최대 RSS | 146,376KiB | 274,516KiB |
+| 결과 | MemoryGuard 종료 | MemoryGuard 종료 |
+
+생존 시간은 `Agent listening`부터 MemoryGuard 종료 요청 로그까지입니다. 증가분은 `32.363 - 17.202 = 15.161초`입니다. OS가 완전히 종료한 정확한 순간까지 측정한 값은 아닙니다. [OOM 보고서](../reports/01-oom.md)
+
+한도를 높이는 것은 그릇을 크게 만드는 것과 비슷합니다. 계속 들어오는 데이터를 줄이거나 회수하지 않으면 다시 한도에 도달합니다. **임시 조치**는 우리가 한 한도 상향이고, **보호 정책**은 앱의 MemoryGuard 동작입니다. 두 용어를 구분합니다.
+
+25MB 단위로 증가해 128에서는 125→150, 256에서는 250→275 단계에서 초과했습니다. 1초 관제는 마지막 할당과 종료 사이를 놓칠 수 있으므로 관측 최대와 실제 절대 최대를 구분합니다.
+
+근본 조치의 제안은 보관량 제한·캐시 만료·참조 회수 등의 소스 검토입니다. 실제로 수정·검증한 코드 변경이라고 말하지 않습니다.
+
+## 8. CPU: 세 종류의 숫자 구분
+
+| 지표 | 측정 범위 | 설명 시 주의 |
+|---|---|---|
+| 앱 `Current Load` | 내부 계산 값 | OS 사용률과 같다고 가정하지 않음 |
+| ps `%CPU` | 실행 이후 평균 | 짧은 버스트가 작게 보일 수 있음 |
+| top `%CPU` | 갱신 구간 | 관측 간격·CPU 표시 모드 확인 |
+
+예전 첫 관측은 1초 간격 30회로 최대 4%였고 기록이 실제 종료 전에 끝났습니다. 더 짧은 구간과 종료 로그를 보기 위해 PTY 기록 및 0.1초 관제를 추가했습니다. 관측 부족을 숨기지 않고 보완한 것입니다.
+
+**실행 구문 해설 — 경로와 관제 대상이 준비된 단계에서 사용**
+
+```bash
+script -q -e -f -c './agent-leak-app' "$RUN_DIR/app.log" \
+  < /dev/null > "$RUN_DIR/console.log" 2>&1 &
+SESSION_PID=$!
+LC_ALL=C top -b -d 0.1 -n 450 -w 180 -p "$TOP_PIDS" \
+  > "$RUN_DIR/top.log" 2> "$RUN_DIR/top-error.log" &
+```
+
+`TOP_PIDS`는 이번 앱 PID들을 쉼표로 연결한 목록입니다. `script`는 가상 터미널 출력을 기록하며 `-q`는 안내 축소, `-e`는 자식 종료 상태 반영, `-f`는 자주 기록, `-c`는 명령 지정입니다. `< /dev/null`은 사용자 터미널 입력을 읽지 않도록 연결합니다. [script 매뉴얼](https://man7.org/linux/man-pages/man1/script.1.html)
+
+Python stdout은 터미널과 일반 파일에서 버퍼링 방식이 다를 수 있습니다. PTY로 재수집했을 때 Watchdog 문구를 확보했습니다. 버퍼링을 유일한 원인으로 확정하거나 이 바이너리의 정확한 Python 버전을 단정하지 않습니다. [Python 출력 문서](https://docs.python.org/3/library/sys.html#sys.stdout)
+
+`top -b`는 배치, `-d 0.1`은 간격, `-n 450`은 최대 화면 수, `-w 180`은 폭, `-p`는 대상 선택입니다. 관제 자체 종료와 앱 종료는 별개입니다. 첫 프레임은 이후 갱신 구간과 구분해 집계에서 제외했습니다. 기록 시작·끝도 확인하며 수집 범위 밖은 추정값으로 채우지 않습니다.
+
+기본 Irix 모드의 프로세스 100%는 논리 CPU 하나 기준이며, 표시 모드에 따라 해석이 달라집니다. 멀티스레드 프로세스는 100%를 넘을 수도 있습니다. [top 매뉴얼](https://man7.org/linux/man-pages/man1/top.1.html)
+
+## 9. CPU 종료와 설정 변경 검증
+
+**예전 실제 출력 — 원본에서 핵심 구간 발췌, 입력하지 않음**
+
+```text
+2026-10-09 11:58:20,549 [INFO] [CpuWorker] Current Load: 53.11%
+2026-10-09 11:58:20,649 [CRITICAL] [CpuWorker] CPU Threshold Violated! (53.11%).
+>>> [SYSTEM] WATCHDOG: INITIATING EMERGENCY ABORT (SIGTERM) <<<
+```
+
+| 비교 항목 | Before | After |
+|---|---|---|
+| 메모리 / CPU / 동시 설정 | 512 / 80 / false | 512 / 40 / false |
+| 작업 PID | 1921 | 2359 |
+| top 관측 최대 | 50.0% | 40.0% |
+| 앱 동작 | Watchdog 보호 종료 | 40%에서 냉각, 5%에서 재증가 |
+| 생존·종료 | 36.380초 후 보호 종료 | 55초 시점 진행, 이후 수동 종료 |
+| 최종 코드 | 143 | 143 |
+
+설정 80인데 내부 53.11%에서 종료했으므로 환경변수를 “OS CPU 80% 초과 시 종료 기준”이라고 설명하지 않습니다. 구간 최대 50%가 지속 사용률이나 컴퓨터 전체 사용률이라는 뜻도 아닙니다. [CPU 보고서와 증거 링크](../reports/02-cpu.md)
+
+CPU 경쟁은 다른 실행 가능 작업의 대기를 늘릴 수 있습니다. 이번에는 요청 응답 시간·P99·시스템 전체 포화를 별도로 측정하지 않았으므로 지연 수치를 만들어 말하지 않습니다. 설정 40의 결과는 이번 관측 범위의 보호 종료 회피이며 영구 무장애 보장이 아닙니다.
+
+## 10. Deadlock: 살아 있음과 진행함 구분
+
+프로세스는 실행 중인 프로그램이고 스레드는 그 안의 실행 흐름입니다. 같은 프로세스의 스레드는 주소 공간을 공유합니다. 공유 자원을 보호하는 락의 획득 순서가 충돌하면 교착이 발생할 수 있습니다.
+
+**관측 명령 해설 — 현재 작업 자식 PID를 확인한 뒤 사용**
+
+```bash
+ps -ef | grep '[a]gent-leak-app'
+ps -L -p "$WORKER_PID" -o pid,tid,pcpu,rss,time,stat,wchan:32,comm
+stat -c 'log_bytes=%s modified=%y' "$RUN_DIR/app.log"
+tail -n 20 "$RUN_DIR/app.log"
+```
+
+| 조회 | 목적 |
+|---|---|
+| `ps -ef` | PID 존재와 부모 관계 확인 |
+| `-L`, `tid` | 스레드 단위 관측 |
+| `time` | 누적 CPU 시간, 표시 정밀도 확인 |
+| `wchan` | 커널 대기 위치 참고 |
+| `stat` | 로그 크기·마지막 수정 시각 |
+| `tail` | 마지막 작업 지점 |
+
+두 번 이상 시각을 두고 동일 항목을 저장합니다. 첫 관측이 락 획득 중이고 다음 관측에 BLOCKED가 추가됐다면 그 구간에는 진행이 있었습니다. **BLOCKED 이후 추가 관측**으로 정체를 확인해야 합니다. 단순히 sleep 10을 입력했다는 이유만으로 실제 스냅샷 간격이 10초라고 쓰지 않고 수집 시각을 확인합니다.
+
+예전 true 실행에서는 PID 9226이 유지되고 RSS 18,512KiB, 로그 2,792바이트와 수정 시각이 두 관측에서 동일했습니다. 마지막 로그에서 T1은 A를 보유하며 B를 기다리고 T2는 B를 보유하며 A를 기다렸습니다. [원본 스냅샷](../evidence/deadlock-true-20261009-125943/snapshot-2.txt)
+
+| 교착 조건 | 이번 사례와의 연결 |
+|---|---|
+| 상호 배제 | 각 자원 락을 한 워커가 보유 |
+| 점유 대기 | 보유한 상태에서 다른 락 요청 |
+| 비선점 | 대기자가 상대 락을 임의 회수하지 못하는 일반 락 모델로 추론 |
+| 순환 대기 | T1→B→T2→A→T1 |
+
+**판단:** 락 보유·추가 요청·순환 관계와 진행 정체를 함께 근거로 진단합니다. futex는 동기화 대기에 쓰이므로 `futex_do_wait`만으로 교착을 확정하지 않습니다. 락 구현 종류·타임아웃과 Worker 이름별 TID 대응은 미확인입니다. [futex 매뉴얼](https://man7.org/linux/man-pages/man2/futex.2.html)
+
+## 11. Deadlock 회피, 수동 종료와 종료 코드
+
+메모리 512와 CPU 40을 고정하고 동시 설정만 true→false로 바꿨습니다.
+
+| 관측 | true | false |
+|---|---|---|
+| PID | 유지 | 유지 |
+| RSS | 18,512→18,512KiB | 121,000→197,812KiB |
+| 로그 크기 | 2,792→2,792바이트 | 3,474→3,870바이트 |
+| 작업 | 순환 대기 뒤 정체 | 워커 로그 진행 |
+| 마지막 종료 | 수동 SIGTERM | 수동 SIGTERM |
+
+false에서도 스레드 3개와 메인 futex 대기가 관측됐습니다. 앱 전체의 단일 스레드 전환이라고 말하지 않습니다. 로그 진행을 근거로 이번 교착 경로 회피를 확인했습니다. RSS 증가만으로 정상이라고 판단하거나 그 증가만으로 정상 시나리오 전체를 누수라고 확정하지 않습니다. [Deadlock 보고서](../reports/03-deadlock.md)
+
+실험 정리 시 기록한 PID와 현재 이름·부모 관계를 확인한 뒤 SIGTERM을 요청하고 시각·대상을 `cleanup.log`에 남깁니다. 예전 PID를 그대로 종료하지 않습니다. 부모 종료 후 자식도 사라졌어도 내부 신호 전달 방식까지 확인한 것은 아닙니다.
+
+**종료 상태 저장 구문 해설**
+
+```bash
+wait "$SESSION_PID"
+SESSION_EXIT=$?
+printf '%s\n' "$SESSION_EXIT" > "$RUN_DIR/exit-code.txt"
+```
+
+`wait`는 현재 셸이 시작한 자식 작업의 종료 상태를 회수합니다. `$?`는 직전 명령 상태이므로 바로 저장합니다. 일반 실행에서는 앱 시작 PID, PTY에서는 기록 작업 PID를 사용합니다. 새 셸에서 과거 PID의 종료 코드를 임의로 복원하지 않습니다.
+
+137은 128+9, 143은 128+15인 시그널 종료 규칙과 일치하지만, 프로그램이 같은 숫자를 직접 반환할 수도 있어 숫자만으로 원인·발신자를 확정하지 않습니다. Watchdog 로그와 수동 기록을 대조합니다. 규칙은 [script의 종료 상태 설명](https://man7.org/linux/man-pages/man1/script.1.html)에 명시돼 있습니다.
+
+## 12. 보고서를 증거와 함께 설명하기
+
+각 장애 보고서는 현상·증거·원인·조치 및 검증의 4개 절을 갖춥니다. 설명은 다음 순서로 구성합니다.
+
+1. **결론:** 무엇이 발생했는가?
+2. **증거:** 어떤 파일의 어떤 시각·PID·값이 뒷받침하는가?
+3. **비교:** 무엇 하나를 변경했고 무엇이 달라졌는가?
+4. **한계:** 어떤 내용은 확인하지 못했는가?
+
+| 분류 | 말할 수 있는 내용 |
+|---|---|
+| 확인한 사실 | 로그 문구, 설정, PID, RSS, 구간 CPU, 종료 코드 |
+| 증거 기반 판단 | MemoryGuard 보호 종료, Watchdog 보호 종료, 순환 대기 진단 |
+| 미확인 | 특정 소스 위치, 실제 요청 지연량, 내부 보호 기준 구현 |
+
+본 실험은 바이너리를 실행하고 외부 상태를 관측했으며 디컴파일·리버스 엔지니어링을 하지 않았습니다. 선택 스케줄링 분석도 [응용 작업 로그의 FCFS형 패턴](../reports/04-scheduling-analysis.md)에 대한 추론입니다. Linux 커널 알고리즘의 확정이 아닙니다.
+
+다음은 [평가 질문과 답변 근거](evaluation-guide.md)를 보고, [빈 실습 기록 양식](../templates/learning-record-template.md)을 본인 표현으로 작성합니다. 문서를 게시한 것과 학습자가 직접 수행·이해한 것은 구분합니다.
