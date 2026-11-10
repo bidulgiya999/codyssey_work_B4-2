@@ -1,0 +1,29 @@
+2026-11-10T19:59:08+09:00
+jae0608    16862    8678  0 19:56 pts/3    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/agent-b42-practice/evidence/deadlock-false-20261110-195628/app.log
+jae0608    16865   16862  0 19:56 pts/4    00:00:00 ./agent-leak-app
+jae0608    16896   16865  1 19:56 pts/4    00:00:01 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+  16896   16896  0.0 120976 00:00:00 SNl+ futex_do_wait                   agent-leak-app
+  16896   16978  0.6 120976 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+  16896   16979  0.7 120976 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+log_bytes=9439 modified=2026-11-10 19:59:06.014734850 +0900
+2026-11-10 19:58:46,559 [INFO] [MemoryWorker] Current Heap: 375MB
+2026-11-10 19:58:47,314 [INFO] [CpuWorker] Current Load: 6.64%
+2026-11-10 19:58:49,592 [INFO] [MemoryWorker] Current Heap: 400MB
+2026-11-10 19:58:50,431 [INFO] [CpuWorker] Current Load: 13.54%
+2026-11-10 19:58:52,629 [INFO] [MemoryWorker] Current Heap: 425MB
+2026-11-10 19:58:53,547 [INFO] [CpuWorker] Current Load: 22.74%
+2026-11-10 19:58:55,663 [INFO] [MemoryWorker] Current Heap: 450MB
+2026-11-10 19:58:56,668 [INFO] [CpuWorker] Current Load: 32.55%
+2026-11-10 19:58:58,698 [INFO] [MemoryWorker] Current Heap: 475MB
+2026-11-10 19:58:59,782 [INFO] [CpuWorker] Current Load: 37.94%
+2026-11-10 19:59:01,732 [INFO] [MemoryWorker] Current Heap: 500MB
+2026-11-10 19:59:01,893 [INFO] [CpuWorker] Peak reached (40.00%). Starting cooldown...
+2026-11-10 19:59:02,898 [INFO] [CpuWorker] Current Load: 40.00%
+2026-11-10 19:59:04,765 [INFO] [MemoryWorker] Current Heap: 525MB
+2026-11-10 19:59:04,766 [WARNING] [MemoryWorker] Memory Usage Reached Limit (525MB). Starting cleanup...
+2026-11-10 19:59:04,781 [INFO] [System] Memory Cache Flushed. Process Stabilized.
+
+>>> [SYSTEM] MEMORY RECOVERED (Cache Cleared) <<<
+
+2026-11-10 19:59:06,014 [INFO] [CpuWorker] Current Load: 37.21%

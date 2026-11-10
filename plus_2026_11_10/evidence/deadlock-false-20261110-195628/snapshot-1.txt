@@ -1,0 +1,29 @@
+2026-11-10T19:58:58+09:00
+jae0608    16862    8678  0 19:56 pts/3    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/agent-b42-practice/evidence/deadlock-false-20261110-195628/app.log
+jae0608    16865   16862  0 19:56 pts/4    00:00:00 ./agent-leak-app
+jae0608    16896   16865  1 19:56 pts/4    00:00:01 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+  16896   16896  0.0 505008 00:00:00 SNl+ futex_do_wait                   agent-leak-app
+  16896   16978  0.7 505008 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+  16896   16979  0.7 505008 00:00:00 SNl+ poll_schedule_timeout.constprop. agent-leak-app
+log_bytes=8778 modified=2026-11-10 19:58:58.714736428 +0900
+2026-11-10 19:58:31,377 [INFO] [MemoryWorker] Current Heap: 250MB
+2026-11-10 19:58:31,732 [INFO] [CpuWorker] Current Load: 18.61%
+2026-11-10 19:58:34,411 [INFO] [MemoryWorker] Current Heap: 275MB
+2026-11-10 19:58:34,849 [INFO] [CpuWorker] Current Load: 17.59%
+2026-11-10 19:58:37,450 [INFO] [MemoryWorker] Current Heap: 300MB
+2026-11-10 19:58:37,965 [INFO] [CpuWorker] Current Load: 16.19%
+2026-11-10 19:58:40,486 [INFO] [MemoryWorker] Current Heap: 325MB
+2026-11-10 19:58:41,082 [INFO] [CpuWorker] Current Load: 9.51%
+2026-11-10 19:58:43,193 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-11-10 19:58:43,523 [INFO] [MemoryWorker] Current Heap: 350MB
+2026-11-10 19:58:44,198 [INFO] [CpuWorker] Current Load: 5.00%
+2026-11-10 19:58:46,559 [INFO] [MemoryWorker] Current Heap: 375MB
+2026-11-10 19:58:47,314 [INFO] [CpuWorker] Current Load: 6.64%
+2026-11-10 19:58:49,592 [INFO] [MemoryWorker] Current Heap: 400MB
+2026-11-10 19:58:50,431 [INFO] [CpuWorker] Current Load: 13.54%
+2026-11-10 19:58:52,629 [INFO] [MemoryWorker] Current Heap: 425MB
+2026-11-10 19:58:53,547 [INFO] [CpuWorker] Current Load: 22.74%
+2026-11-10 19:58:55,663 [INFO] [MemoryWorker] Current Heap: 450MB
+2026-11-10 19:58:56,668 [INFO] [CpuWorker] Current Load: 32.55%
+2026-11-10 19:58:58,698 [INFO] [MemoryWorker] Current Heap: 475MB

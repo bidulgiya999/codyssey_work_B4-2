@@ -1,0 +1,5 @@
+110:2026-11-10 19:47:16,451 [INFO] [CpuWorker] Current Load: 39.53%
+111:2026-11-10 19:47:16,451 [INFO] [MemoryWorker] Current Heap: 100MB
+112:2026-11-10 19:47:18,562 [INFO] [CpuWorker] Peak reached (40.00%). Starting cooldown...
+113:2026-11-10 19:47:19,496 [INFO] [MemoryWorker] Current Heap: 125MB
+114:2026-11-10 19:47:19,568 [INFO] [CpuWorker] Current Load: 40.00%

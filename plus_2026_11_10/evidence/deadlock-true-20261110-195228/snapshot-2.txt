@@ -1,0 +1,29 @@
+2026-11-10T19:53:53+09:00
+jae0608    15018    8678  0 19:53 pts/3    00:00:00 script -q -e -f -c ./agent-leak-app /home/jae0608/agent-b42-practice/evidence/deadlock-true-20261110-195228/app.log
+jae0608    15021   15018  0 19:53 pts/4    00:00:00 ./agent-leak-app
+jae0608    15052   15021  0 19:53 pts/4    00:00:00 ./agent-leak-app
+    PID     TID %CPU   RSS     TIME STAT WCHAN                            COMMAND
+  15052   15052  0.0 18428 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+  15052   15174  0.0 18428 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+  15052   15175  0.0 18428 00:00:00 SNl+ futex_do_wait                    agent-leak-app
+log_bytes=2802 modified=2026-11-10 19:53:12.458559161 +0900
+ [ MEMORY ] Limit: 512MB 		[ OK ]
+ [ CPU    ] Limit: 40%  		[ OK ]
+ [ THREAD ] Concurrency: True 		[ WARNING ]
+--------------------------------------------------
+ >>> SYSTEM WARNING: POTENTIAL DEADLOCK IN CONCURRENT MODE.
+==================================================
+
+2026-11-10 19:53:05,399 [WARNING] [AgentWorker] Initializing concurrent transaction processors...
+2026-11-10 19:53:05,399 [WARNING] [System] CAUTION: Strict resource locking is enabled.
+2026-11-10 19:53:10,425 [INFO] [Worker-Thread-1] Process Started. Attempting to lock [Shared_Memory_A]...
+2026-11-10 19:53:10,425 [INFO] [AgentWorker][Worker-Thread-2] Process Started. Attempting to lock [Socket_Pool_B]...
+2026-11-10 19:53:10,426 [INFO] [AgentWorker][Worker-Thread-1] LOCK ACQUIRED: [Shared_Memory_A]. (Holding...)
+2026-11-10 19:53:10,426 [INFO] [AgentWorker] Waiting for worker threads to complete transactions...
+2026-11-10 19:53:10,445 [INFO] [AgentWorker][Worker-Thread-2] LOCK ACQUIRED: [Socket_Pool_B]. (Holding...)
+2026-11-10 19:53:10,446 [INFO] [AgentWorker][Worker-Thread-1] Processing critical data in Memory A...
+2026-11-10 19:53:10,447 [INFO] [AgentWorker][Worker-Thread-2] Establishing network connections in Pool B...
+2026-11-10 19:53:12,457 [INFO] [AgentWorker][Worker-Thread-1] Need resource [Socket_Pool_B] to finish job.
+2026-11-10 19:53:12,457 [INFO] [AgentWorker][Worker-Thread-2] Need resource [Shared_Memory_A] to write logs.
+2026-11-10 19:53:12,458 [INFO] [AgentWorker][Worker-Thread-1] WAITING for [Socket_Pool_B]... (Status: BLOCKED)
+2026-11-10 19:53:12,458 [INFO] [AgentWorker][Worker-Thread-2] WAITING for [Shared_Memory_A]... (Status: BLOCKED)

@@ -1,0 +1,121 @@
+{
+  "oom128": {
+    "folder": "oom-128-20261110-193545",
+    "worker_pid": 11373,
+    "csv": {
+      "samples": 17,
+      "first_rss": 18392,
+      "max_rss": 146412,
+      "last_rss": 146412
+    },
+    "exit_code": 137,
+    "log_lifetime_s": 17.185,
+    "start_log": "2026-11-10T19:36:36.661",
+    "stop_request_log": "2026-11-10T19:36:53.846"
+  },
+  "oom256": {
+    "folder": "oom-256-20261110-193915",
+    "worker_pid": 11834,
+    "csv": {
+      "samples": 33,
+      "first_rss": 18452,
+      "max_rss": 274492,
+      "last_rss": 0
+    },
+    "exit_code": 137,
+    "log_lifetime_s": 32.355,
+    "start_log": "2026-11-10T19:39:40.578",
+    "stop_request_log": "2026-11-10T19:40:12.933"
+  },
+  "cpu80": {
+    "folder": "cpu-80-pty-20261110-194141",
+    "worker_pid": 12479,
+    "csv": {
+      "samples": 36,
+      "first_rss": 18448,
+      "max_rss": 18512,
+      "last_rss": 18512
+    },
+    "exit_code": 143,
+    "log_lifetime_s": 36.385,
+    "start_log": "2026-11-10T19:42:29.310",
+    "stop_request_log": "2026-11-10T19:43:05.695",
+    "top": {
+      "frames": 1044,
+      "samples": 359,
+      "max_cpu": 50.0,
+      "first_frame": "top - 19:42:29 up  2:07,  1 user,  load average: 0.16, 0.08, 0.06",
+      "last_frame": "top - 19:44:14 up  2:08,  1 user,  load average: 0.10, 0.08, 0.06",
+      "first_peak_frame": "top - 19:43:02 up  2:07,  1 user,  load average: 0.09, 0.07, 0.05"
+    }
+  },
+  "cpu40": {
+    "folder": "cpu-40-pty-20261110-194524",
+    "worker_pid": 13127,
+    "csv": {
+      "samples": 146,
+      "first_rss": 18436,
+      "max_rss": 530732,
+      "last_rss": 146660
+    },
+    "exit_code": 143,
+    "top": {
+      "frames": 1464,
+      "samples": 1462,
+      "max_cpu": 70.0,
+      "first_frame": "top - 19:45:59 up  2:10,  1 user,  load average: 0.17, 0.10, 0.07",
+      "last_frame": "top - 19:48:26 up  2:13,  1 user,  load average: 0.01, 0.05, 0.05",
+      "first_peak_frame": "top - 19:47:16 up  2:11,  1 user,  load average: 0.04, 0.07, 0.06"
+    }
+  },
+  "deadtrue": {
+    "folder": "deadlock-true-20261110-195228",
+    "worker_pid": 15052,
+    "csv": {
+      "samples": 149,
+      "first_rss": 18360,
+      "max_rss": 18428,
+      "last_rss": 18428
+    },
+    "exit_code": 143,
+    "snapshots": [
+      {
+        "at": "2026-11-10T19:53:43+09:00",
+        "rss": 18428,
+        "log_bytes": 2802,
+        "modified": "2026-11-10 19:53:12.458559161 +0900"
+      },
+      {
+        "at": "2026-11-10T19:53:53+09:00",
+        "rss": 18428,
+        "log_bytes": 2802,
+        "modified": "2026-11-10 19:53:12.458559161 +0900"
+      }
+    ]
+  },
+  "deadfalse": {
+    "folder": "deadlock-false-20261110-195628",
+    "worker_pid": 16896,
+    "csv": {
+      "samples": 357,
+      "first_rss": 18360,
+      "max_rss": 530652,
+      "last_rss": 274588
+    },
+    "exit_code": 143,
+    "snapshots": [
+      {
+        "at": "2026-11-10T19:58:58+09:00",
+        "rss": 505008,
+        "log_bytes": 8778,
+        "modified": "2026-11-10 19:58:58.714736428 +0900"
+      },
+      {
+        "at": "2026-11-10T19:59:08+09:00",
+        "rss": 120976,
+        "log_bytes": 9439,
+        "modified": "2026-11-10 19:59:06.014734850 +0900"
+      }
+    ]
+  }
+}
