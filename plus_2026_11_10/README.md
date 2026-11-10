@@ -4,7 +4,9 @@
 
 ## 평가 준비와 보고서
 
-[발표 메모·OOM 모의평가 질문16개](evaluation-qa.md) · [메모장용 텍스트 다운로드](evaluation-qa.txt)
+[발표 메모·장애별 모의평가 질문48개](evaluation-qa.md) · [메모장용 텍스트 다운로드](evaluation-qa.txt)
+
+[평가 항목1~4 답변·개념 해설](evaluation-rubric-guide.md) · [평가 기준 메모장용](evaluation-rubric-guide.txt)
 
 발표문 아래에 답변·선택 이유·쉬운 설명·원본 참조 위치를 붙였습니다. 메모장용 파일은 다운로드한 뒤 열어 필요한 표현을 수정할 수 있습니다.
 

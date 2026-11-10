@@ -1,10 +1,12 @@
-# 발표 메모와 OOM 모의평가 질문·답변
+# 발표 메모와 OOM·CPU·Deadlock 모의평가 질문·답변
 
 기준: 2026-11-10 실측값. 작업 위치: **plus_2026_11_10/**.
 
 **현재 상태:** 필수 실험6회, 보고서3건, 원본 증거 보존·백업·GitHub 업로드는 완료했습니다. 남은 준비는 보고서 본인 검토, 설명 연습, 평가자가 요구한 최종 제출 링크·방식·기한 확인입니다. 이 문서는 추가 실험 과제가 아니라 평가 준비 자료입니다.
 
 아래 답변은 연습 예시입니다. 사용자가 직접 실행한 부분과 Codex가 절차·코드·정리를 도운 부분을 구분해 설명합니다. 이해하지 못한 내부 구현까지 확인했다고 말하지 않습니다. 숫자는 보고서 표를 보며 읽어도 됩니다.
+
+[평가 항목1~4의 답변과 개념 정리](evaluation-rubric-guide.md)도 함께 확인하세요. 운영 대응·개선안은 실제 수행 결과와 구분해 적었습니다.
 
 ## 1. 메모장에 넣을 전체 발표 메모
 
@@ -48,7 +50,7 @@
 - 답변: Watchdog는 상태를 감시해 보호 동작을 수행하는 장치이고 SIGTERM은 프로세스에 보내는 종료 요청입니다.
 - 왜 이렇게 했는지: 종료 코드만 보지 않고 종료를 요청한 정책을 로그로 확인했습니다.
 - 쉬운 설명: 감시자가 과점유로 판정하고 작업 종료를 요청한 상황입니다.
-- 보여줄 곳: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘Before: CPU 상승과 Watchdog 종료’. 원본은 [CPU80 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-80-pty-20261110-194141/app.log).
+- 보여줄 곳: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘Before: CPU 상승과 Watchdog 종료’. 원본은 [CPU 80 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-80-pty-20261110-194141/app.log).
 
 ### 1-5. CPU 냉각과 생존 확인
 
@@ -58,9 +60,9 @@
 - 답변: PID 존재 외에도 부하가 내려가는 냉각 로그와 후속 작업 기록을 함께 확인했습니다.
 - 왜 이렇게 했는지: 프로세스가 살아 있어도 작업이 정체될 수 있기 때문입니다.
 - 쉬운 설명: 직원이 자리에 있는 것과 일을 계속 처리하는 것은 다릅니다.
-- 보여줄 곳: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘After: 냉각과 생존’, [CPU40 생존 확인](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/ps-check.txt). ELAPSED86은 해당 프로세스 경과 초입니다.
+- 보여줄 곳: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘After: 냉각과 생존’, [CPU 40 생존 확인](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/ps-check.txt). ELAPSED86은 해당 프로세스 경과 초입니다.
 
-### 1-6. CPU70%와 수동 종료
+### 1-6. CPU 70%와 수동 종료
 
 발표문: “top 최대는70%였으므로 전체CPU가40% 이하로 제한됐다고 설명하지 않았습니다. 변경 후 마지막 종료는 수동 정리였습니다.”
 
@@ -68,9 +70,9 @@
 - 답변: 앱 설정과 내부 지표, OS의 프로세스 전체 구간 사용률은 다릅니다. 정확한 작업별 기여도는 확인하지 못했습니다.
 - 왜 이렇게 했는지: 예상과 달라도 실제 측정값을 보존하고, 측정하지 않은 개선을 주장하지 않기 위해서입니다.
 - 쉬운 설명: 앱에 전달한 설정 숫자가 OS 도구의 모든 순간 사용률과 같은 것은 아닙니다.
-- 보여줄 곳: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘예상과 달랐던70% 구간’, [CPU40의70% 화면](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-frames.txt), [CPU40 수동 정리](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/cleanup.log).
+- 보여줄 곳: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘예상과 달랐던70% 구간’, [CPU 40의70% 화면](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-frames.txt), [CPU 40 수동 정리](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/cleanup.log).
 - 추가 질문: 둘 다143이면 같은 종료 아닌가요?
-- 답변: CPU80은 Watchdog 로그가 있고 CPU40은 실험자의 manual SIGTERM 기록이 있어 종료 주체가 다릅니다.
+- 답변: CPU 80은 Watchdog 로그가 있고 CPU 40은 실험자의 manual SIGTERM 기록이 있어 종료 주체가 다릅니다.
 
 ### 1-7. Deadlock의 순환 대기
 
@@ -220,7 +222,239 @@
 - 쉬운 설명: 물통의 기준선만 높이는 대신 불필요하게 계속 쌓이는 이유를 찾아 고치는 단계입니다.
 - 참조: [OOM 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Workaround & Verification 추가 제안.
 
-## 3. 최종 확인
+## 3. CPU 모의평가 질문·답변
+
+먼저 CPU Q1~Q8을 연습하고, Q9~Q16으로 추가 질문에 대비합니다.
+
+### CPU Q1. CPU 실험에서는 무엇을 비교했나요?
+
+- 답변: 메모리512와 동시 설정false를 유지하고 CPU 설정만80에서40으로 변경했습니다. 프로세스 CPU와 앱 내부 부하, 종료·생존 여부를 비교했습니다.
+- 왜 이렇게 했는지: 하나의 설정 변경과 결과를 연결하려고 나머지 조건과 수집 방법을 유지했습니다.
+- 쉬운 설명: 한 조건만 바꿔 두 번 실행한 비교 실험입니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 Description과 비교 표.
+
+### CPU Q2. 왜 메모리512와 동시 설정false를 사용했나요?
+
+- 답변: 메모리 설정은 허용 상한512로 고정하고 동시 트랜잭션의 교착 경로는false로 껐습니다. 이 조건에서 CPU 부하와 보호 동작을 관찰했습니다.
+- 왜 이렇게 했는지: CPU 비교에 다른 종료·정체 조건이 섞이는 영향을 줄이기 위한 선택입니다. 모든 메모리 문제를 막는다는 보장은 아닙니다.
+- 쉬운 설명: CPU 실험 중 다른 설정은 같은 자리에 고정한 것입니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 재현 및 수집 경로, 두 실행의settings.txt.
+
+### CPU Q3. 왜80과40을 선택했나요?
+
+- 답변: 둘 다 허용 범위10~100 안입니다. 80에서는 부하 상승과 보호 종료를 관찰했고,40은 앱의50미만 권고에 들어가는 비교값으로 선택했습니다.
+- 왜 이렇게 했는지: 허용 입력과 권장값, 실제 동작 기준을 구분해 설정 변경의 효과를 확인하려고 했습니다.
+- 쉬운 설명: 입력 가능하다는 것과 권장 운영값이라는 것은 다릅니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 Description·Workaround, [CPU 80 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-80-pty-20261110-194141/app.log), [CPU 40 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/app.log).
+
+### CPU Q4. 무엇 때문에 종료됐다고 판단했나요?
+
+- 답변: CPU 80 로그에 임계치 위반과 Watchdog의 SIGTERM 요청이 있고 종료 상태는143이었습니다. 로그 기준36.385초 후 보호 종료를 요청했습니다.
+- 왜 이렇게 했는지: 내부 부하 증가와 명시적인 종료 요청을 함께 확인했기 때문입니다.
+- 쉬운 설명: 감시자가 위반을 기록하고 종료를 요청한 문장이 핵심입니다.
+- 참조: [CPU 80 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-80-pty-20261110-194141/app.log)와 [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 Before 로그.
+
+### CPU Q5. 종료 코드143이면 항상 Watchdog인가요?
+
+- 답변: 아닙니다. 143은SIGTERM 해석과 일치하지만 숫자만으로 종료 주체는 알 수 없습니다. CPU 80은Watchdog 로그, CPU 40은실험자의 수동SIGTERM 기록으로 구분했습니다.
+- 왜 이렇게 했는지: 같은 종료 상태라도 요청자가 다를 수 있어 조치 기록과 앱 로그를 대조합니다.
+- 쉬운 설명: 같은 ‘문이 닫힘’이어도 자동 장치인지 사람이 닫았는지 따로 확인하는 것입니다.
+- 참조: [CPU 80 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-80-pty-20261110-194141/app.log), [CPU 40 수동 종료](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/cleanup.log).
+
+### CPU Q6. 40으로 바꾼 뒤 어떤 결과를 확인했나요?
+
+- 답변: 앱이40%에서 냉각을 시작했고5%까지 낮춘 후 다시 부하를 높이는 로그를 확인했습니다. ps에서 경과86초 시점에 PID와 작업 진행을 확인했습니다.
+- 왜 이렇게 했는지: 단순한PID 존재 외에 후속 작업 로그를 확인해야 진행 여부를 설명할 수 있습니다.
+- 쉬운 설명: 프로세스가 남아 있는 것과 일을 계속 처리하는 것을 함께 확인했습니다.
+- 참조: [CPU 40 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/app.log), [86초 시점 ps](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/ps-check.txt).
+
+### CPU Q7. 왜40설정인데 top은70%가 나왔나요?
+
+- 답변: 앱에 전달한 설정값·앱 내부 계산값과 프로세스 전체의OS 구간 사용률은 다릅니다. 여러 작업이CPU에 기여할 수 있으나70%의 작업별 기여도는 확인하지 못했습니다.
+- 왜 이렇게 했는지: 측정 범위와 계산 기준이 다른 값을 하나로 취급하지 않기 위해서입니다.
+- 쉬운 설명: 내부 작업의 설정값과 프로세스 전체를 밖에서 잰 값은 다른 계기입니다.
+- 참조: [70% 실제 화면](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-frames.txt), [같은 초 주변 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-app-context.txt).
+
+### CPU Q8. CPU 실험 결론을 한 문단으로 말해보세요.
+
+- 답변: 80설정은Watchdog로 종료됐고40설정은 냉각과86초 시점 생존·진행을 확인했습니다. 다만 top 최대는70%였으므로OS CPU 최대 감소나40% 강제 제한을 주장하지 않았습니다. 변경 후 종료는 수동 정리였습니다.
+- 왜 이렇게 했는지: 확인한 효과와 기대와 달랐던 결과를 모두 보존해 관측 범위대로 결론냈습니다.
+- 쉬운 설명: 냉각·진행은 확인했고, 전체 최대값 감소는 확인하지 못했다고 나눠 말합니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 비교 표와 검증 결론.
+
+### CPU Q9. ps의1.4%와 top의70%는 모순 아닌가요?
+
+- 답변: ps는 프로세스 실행 이후 누적 평균이고 top은 갱신 구간 사용률입니다. 평균이 낮아도 짧은 구간 최대가 높을 수 있습니다.
+- 왜 이렇게 했는지: 시간 범위가 달라질 때 수치가 달라지는 이유를 구분해야 합니다.
+- 쉬운 설명: 하루 평균 속도와 잠깐 낸 최고 속도가 다른 것과 같습니다.
+- 참조: [86초 시점 ps](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/ps-check.txt), [70% 실제 화면](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-frames.txt); ps·top 매뉴얼은 평가 기준 안내의 참고 문헌.
+
+### CPU Q10. 왜 top을0.1초 간격으로 기록하고 첫 화면을 제외했나요?
+
+- 답변: 짧은 부하를 관측하려고 top -b -d0.1을 사용했습니다. 첫 화면은 이후 갱신 구간과 측정 기준이 달라 집계에서 제외했습니다. -p는 대상 PID, -w180은 출력 폭입니다.
+- 왜 이렇게 했는지: 같은 기준으로 프로세스별 표본을 읽으려는 수집·집계 방법입니다.
+- 쉬운 설명: 처음 찍힌 화면과 일정 간격 뒤의 화면을 구분하고, 짧은 상승을 더 촘촘히 기록했습니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 재현 및 수집 경로·관측 범위의 한계, 두top-coverage.txt.
+
+### CPU Q11. 70%가 메모리 할당 때문이라고 확정할 수 있나요?
+
+- 답변: 없습니다. 같은 초에 내부CPU39.53%와 MemoryWorker100MB 기록이 있지만 시간상 함께 보인다는 사실만으로CPU 기여도를 확정할 수 없습니다.
+- 왜 이렇게 했는지: 동시 발생과 인과관계를 구분하고 미확인 원인은 추가 분석 대상으로 남겼습니다.
+- 쉬운 설명: 같은 시간에 두 일이 보였다고 하나가 다른 하나의 원인이라고 단정할 수는 없습니다.
+- 참조: [70% 실제 화면](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-frames.txt), [같은 초 주변 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-app-context.txt).
+
+### CPU Q12. PID가 살아 있으면 CPU 조치가 성공한 것인가요?
+
+- 답변: PID 유지와 함께 냉각·후속 작업 로그를 확인했습니다. 관측 시점의 생존·진행을 말할 수 있지만 모든 요청의 정상 응답이나 영구 안정성을 보장하지 않습니다.
+- 왜 이렇게 했는지: 교착처럼PID만 남고 진행하지 못하는 상황도 있기 때문입니다.
+- 쉬운 설명: 자리만 지키는 것과 실제로 일을 계속하는 것을 구분합니다.
+- 참조: [86초 시점 ps](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/ps-check.txt), [CPU 40 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/app.log).
+
+### CPU Q13. script는 왜 썼고 옵션은 무엇인가요?
+
+- 답변: 가상 터미널에서 앱을 실행하며 출력을 보존하려고 썼습니다. -q는 일반 안내 출력 억제, -e는 실행 명령 종료 상태 반영, -f는 기록 즉시 반영, -c는 실행할 명령 지정입니다.
+- 왜 이렇게 했는지: 앱 출력 기록과 세션 종료 상태를 함께 남기기 위해서입니다. script PID와 앱 PID는 별도로 찾았습니다.
+- 쉬운 설명: 기록 장치와 그 안에서 실행한 앱을 별도로 구분한 것입니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 재현 코드와 각session.pid·ps-start.txt.
+
+### CPU Q14. top 화면1044개인데 작업 표본359개인 이유는요?
+
+- 답변: 앱은19:43:05.695에 종료를 요청했지만 top은19:44:14까지 계속 기록했습니다. 앱 종료 후에는 해당PID 행이 없어 전체 화면 수와PID별 유효 표본 수가 다릅니다.
+- 왜 이렇게 했는지: 도구가 켜진 시간과 앱이 존재한 시간을 구분해야 잘못된 생존 시간을 주장하지 않습니다.
+- 쉬운 설명: 카메라는 계속 찍어도 관측하던 대상이 화면에서 사라질 수 있습니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 비교 표·관측 범위의 한계, Before top-coverage.txt와top-summary.txt.
+
+### CPU Q15. CPU 40에서 메모리도 증가했는데 다시 OOM인가요?
+
+- 답변: 해당 경로에서는525MB에 메모리 정리와 회수 로그가 나온 뒤 작업이 진행했습니다. 초기 증가만으로 앞의OOM128/256과 같은 결과라고 판단하지 않았습니다.
+- 왜 이렇게 했는지: 경로별 동작과 회수 여부를 실제 로그로 확인해야 하기 때문입니다.
+- 쉬운 설명: 쌓였다가 비우며 계속 일하는 경우와 쌓이다 종료되는 경우를 구분합니다.
+- 참조: [CPU 40 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/app.log)의19:47:02 정리 구간, [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 조치와 검증.
+
+### CPU Q16. 실제 응답 지연도 개선됐고 근본적으로 해결됐나요?
+
+- 답변: 응답시간·P99는 측정하지 않았습니다. 앱의 냉각·생존을 확인한 임시 조치로 설명하고, 근본 개선은 작업량·동시성 제한·알고리즘 개선·프로파일링과 별도 지연 측정을 제안합니다.
+- 왜 이렇게 했는지: 프로세스 부하 관측과 실제 서비스 성능 검증은 범위가 다르기 때문입니다.
+- 쉬운 설명: 일하는 방식의 변화는 봤지만 고객이 얼마나 빨리 응답받는지는 따로 재야 합니다.
+- 참조: [CPU 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 OS 원리·Workaround & Verification.
+
+## 4. Deadlock 모의평가 질문·답변
+
+먼저 Deadlock Q1~Q8을 연습하고, Q9~Q16으로 추가 질문에 대비합니다.
+
+### Deadlock Q1. Deadlock은 무엇이고 이번에 어떻게 나타났나요?
+
+- 답변: 서로가 가진 자원을 기다려 진행하지 못하는 상태입니다. true실행에서는PID가 남았지만 로그·RSS가 정체됐고 두 워커의 순환 대기가 기록됐습니다.
+- 왜 이렇게 했는지: 프로세스 존재와 작업 진행을 구분해 진단하려고 했습니다.
+- 쉬운 설명: 각자 한 열쇠를 쥐고 상대 열쇠를 기다리는 상황입니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 Description과 비교 표.
+
+### Deadlock Q2. 무슨 설정만 바꿔 비교했나요?
+
+- 답변: 메모리512와CPU40을 유지하고 동시 설정만true에서false로 바꿨습니다.
+- 왜 이렇게 했는지: 동시 경로 변경과 교착 재현·회피 결과를 연결하기 위해서입니다.
+- 쉬운 설명: 다른 조건은 고정하고 동시 경로 스위치만 바꿨습니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 비교 표와 두settings.txt.
+
+### Deadlock Q3. 프로세스가 살아 있다는 증거는 무엇인가요?
+
+- 답변: ps -ef에서 같은 작업 PID 15052가 두 시점에 조회됐습니다. 세션·부모 실행기·작업 자식의PPID 관계도 확인했습니다.
+- 왜 이렇게 했는지: 종료된 장애와 살아 있지만 정체된 장애를 먼저 구분하기 위해서입니다.
+- 쉬운 설명: 작업이 멈춰도 실행 중인 프로세스 자체는 남을 수 있습니다.
+- 참조: [true 스냅샷1](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-1.txt), [true 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-2.txt).
+
+### Deadlock Q4. CPU가0에 가깝고 futex대기면 무조건 Deadlock인가요?
+
+- 답변: 아닙니다. 정상적인 대기도 가능합니다. 이번에는 자원 보유·상대 자원 요청의 순환 관계와 반복 관측의 정체를 함께 확인했습니다.
+- 왜 이렇게 했는지: 단일 상태 표시만으로 장애를 단정하면 정상 대기를 오진할 수 있습니다.
+- 쉬운 설명: 쉬는 중인지 서로 막혀 멈췄는지는 기다리는 이유까지 봐야 합니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 OS 측정 해석, [true 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/app.log).
+
+### Deadlock Q5. 두 스냅샷에서 무엇이 같았나요?
+
+- 답변: 19:53:43과19:53:53에PID가 존재했고RSS18428KiB, 로그2802바이트, 수정 시각19:53:12.458…가 같았습니다. 스레드 대기도 유지됐습니다.
+- 왜 이렇게 했는지: 시간이 지났는데 새 작업의 흔적이 추가되지 않았다는 근거로 사용했습니다.
+- 쉬운 설명: 10초 뒤 다시 봐도 기록과 상태가 그대로인 것을 확인했습니다.
+- 참조: [true 스냅샷1](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-1.txt), [true 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-2.txt).
+
+### Deadlock Q6. 로그에서 A→B, B→A를 어떻게 찾았나요?
+
+- 답변: Thread-1의A 획득 후B 대기, Thread-2의B 획득 후A 대기를 찾았습니다. 보유한 자원과 추가 요청을 각각 연결했습니다.
+- 왜 이렇게 했는지: 단순히WAITING이라는단어가있는것보다누가무엇을가졌고누구의자원을기다리는지보는것이핵심이기때문입니다.
+- 쉬운 설명: 표를 두 줄로 그리면T1은A보유/B대기,T2는B보유/A대기입니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 마지막 로그와 순환 대기 분석, [true 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/app.log).
+
+### Deadlock Q7. 교착4조건을 이번 로그와 연결해보세요.
+
+- 답변: 상호 배제는A/B 각각의 배타적 소유, 점유 대기는 보유한 채 추가 요청, 비선점은 상대 락을 강제로 회수하지 못하는 일반 락 모델, 순환 대기는T1→B→T2→A→T1입니다. 비선점의 내부 구현은 직접 확인하지 않았습니다.
+- 왜 이렇게 했는지: 개념과 관측 근거를 연결하되 구현을 확인한 것처럼 말하지 않기 위해서입니다.
+- 쉬운 설명: 자원을 혼자 쓰고, 쥔 채 기다리며, 빼앗지 못하고, 기다림이 고리를 이룬 것입니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 교착 조건 표와 Root Cause Analysis.
+
+### Deadlock Q8. ps -L의 PID와 TID, WCHAN은 무엇인가요?
+
+- 답변: PID는 프로세스,TID는 그 안의 스레드 번호입니다. WCHAN은 커널에서 기다리는 위치이고 이번에는futex_do_wait가 보였습니다. 로그의 워커 이름과 개별TID 대응은 확정하지 않았습니다.
+- 왜 이렇게 했는지: 프로세스 안에서 어떤 실행 흐름들이 대기하는지 보기 위해서입니다.
+- 쉬운 설명: 회사 번호는 같고 직원 번호는 다른 상황처럼 읽습니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 ps -L 출력, [true 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-2.txt).
+
+### Deadlock Q9. 스레드3행의 RSS를 모두 더해야 하나요?
+
+- 답변: 아닙니다. 같은PID의 스레드는 주소 공간을 공유하므로 반복된RSS18428을3번 합산하지 않습니다.
+- 왜 이렇게 했는지: 메모리를중복계산하면장애규모를잘못설명하게되기때문입니다.
+- 쉬운 설명: 같은 사무실 면적을 직원 수만큼 더하지 않는 것과 같습니다.
+- 참조: [true 스냅샷1](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-1.txt), [true 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-2.txt).
+
+### Deadlock Q10. false에서 교착이 회피됐다는 근거는요?
+
+- 답변: 19:58:58과19:59:08 사이에 로그가8778에서9439바이트로661바이트 늘고 수정 시각이 변했습니다. CPU 냉각·메모리 정리와 후속 작업 로그도 진행했습니다.
+- 왜 이렇게 했는지: PID 존재뿐아니라실제 진행증거를함께확인했습니다.
+- 쉬운 설명: 같은 자리에 사람이 있고 업무 기록도 새로 쌓였으므로 진행을 확인한 것입니다.
+- 참조: [false 스냅샷1](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-1.txt), [false 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-2.txt), [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 검증 결론.
+
+### Deadlock Q11. false인데 스레드3개와 메인futex대기가 남은 이유는요?
+
+- 답변: false를 앱 전체 단일 스레드 전환으로 확인한 것은 아닙니다. 정상 워커도 이벤트·타이머를 기다릴 수 있고 메인이 워커 완료를 기다릴 수 있습니다. 다른 작업의 진행과 함께 판단했습니다.
+- 왜 이렇게 했는지: 설정 이름으로 전체 내부 구조를 단정하지 않기 위해서입니다.
+- 쉬운 설명: 특정 막히는 경로를 피한 것이지 모든 직원을 한 명으로 줄인 뜻은 아닙니다.
+- 참조: [false 스냅샷1](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-1.txt), [false 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-2.txt).
+
+### Deadlock Q12. false에서 RSS가 크게 줄었는데 정상이라고 봐도 되나요?
+
+- 답변: RSS 505008→120976KiB 감소와 함께 메모리 정리·회수·후속CPU 로그를 확인했습니다. 감소만으로 판정하지 않고 작업 진행을 연결했습니다.
+- 왜 이렇게 했는지: 메모리수치하나의변화가곧서비스정상성을보장하지않기때문입니다.
+- 쉬운 설명: 비운 흔적뿐 아니라 비운 뒤 계속 일하는 기록을 함께 본 것입니다.
+- 참조: [false 스냅샷2](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-2.txt), [false 앱 로그](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/app.log).
+
+### Deadlock Q13. 왜 종료 코드143인데 원래 교착이라고 하나요?
+
+- 답변: 교착상태에서는 앱이 살아 있었고 증거 수집 후 제가SIGTERM으로 정리했습니다. 마지막143은 수동 정리 결과이며 자연 종료의 증거가 아닙니다.
+- 왜 이렇게 했는지: 장애 자체와 실험 종료를 위한 조치를 분리해 기록해야 하기 때문입니다.
+- 쉬운 설명: 멈춘 기계를 관찰한 뒤 사람이 끈 것과 기계가 스스로 꺼진 것은 다릅니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의cleanup.log발췌와종료후ps.
+
+### Deadlock Q14. 왜 한 번이 아니라10초 간격으로 두 번 봤나요?
+
+- 답변: 한 번의 대기는 정상일 수 있습니다. 같은 명령을 반복해 로그·RSS·CPU 시간·대기 위치의 변화를 비교했습니다. 스냅샷 안의 명령들은 순차 조회라 완전히 동일한 순간은 아닙니다.
+- 왜 이렇게 했는지: 진행 여부는 시간에 따른 변화로 확인해야 하기 때문입니다.
+- 쉬운 설명: 사진 한 장보다 시간 차가 있는 두 장이 정체 여부를 보여줍니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 재현 및 같은 형식의 반복 관측.
+
+### Deadlock Q15. 소스 수정이 가능하면 어떻게 예방하나요?
+
+- 답변: 모든 경로에서A 다음B처럼 락 획득 순서를 통일하고 중첩 락을 줄이겠습니다. 타임아웃 시 안전한 롤백과 예외 시 락 해제도 검토하겠습니다. 실제 수정은 아직 하지 않았습니다.
+- 왜 이렇게 했는지: 서로 반대 순서로 잠가 고리가 생기는 원인을 줄이기 위해서입니다.
+- 쉬운 설명: 두 사람 모두 같은 순서로 열쇠를 받게 규칙을 맞추는 것입니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 Workaround & Verification 추가 제안.
+
+### Deadlock Q16. 회피 결과와 분석의 한계까지 요약해보세요.
+
+- 답변: true에서는PID 유지·정체·순환 대기가 있었고false에서는10초간 작업 진행을 확인해 해당 경로 회피로 판단했습니다. 무한 시간 안정성, 모든 요청 응답, 락 내부 구현까지 확인하지는 않았습니다.
+- 왜 이렇게 했는지: 관측한 효과와 추론의 범위를 정확히 전달하기 위해서입니다.
+- 쉬운 설명: 직접 본 구간의 진행은 말할 수 있지만 앞으로 모든 상황을 보장할 수는 없습니다.
+- 참조: [Deadlock 보고서](https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 전체 비교 표와 마지막 검증 결론.
+
+## 5. 최종 확인
 
 - 필수 산출물은 갖춰졌습니다. 평가 합격이나 점수는 평가자가 판단합니다.
 - 제출할 저장소와 폴더는 bidulgiya999/codyssey_work_B4-2의 plus_2026_11_10입니다.
