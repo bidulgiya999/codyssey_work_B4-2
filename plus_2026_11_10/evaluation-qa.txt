@@ -1,0 +1,230 @@
+﻿발표 메모와 OOM 모의평가 질문·답변
+
+기준: 2026-11-10 실측값. 작업 위치: plus_2026_11_10/.
+
+현재 상태: 필수 실험6회, 보고서3건, 원본 증거 보존·백업·GitHub 업로드는 완료했습니다. 남은 준비는 보고서 본인 검토, 설명 연습, 평가자가 요구한 최종 제출 링크·방식·기한 확인입니다. 이 문서는 추가 실험 과제가 아니라 평가 준비 자료입니다.
+
+아래 답변은 연습 예시입니다. 사용자가 직접 실행한 부분과 Codex가 절차·코드·정리를 도운 부분을 구분해 설명합니다. 이해하지 못한 내부 구현까지 확인했다고 말하지 않습니다. 숫자는 보고서 표를 보며 읽어도 됩니다.
+
+1. 메모장에 넣을 전체 발표 메모
+
+각 항목은 발표문 아래에 ‘답변·이유·보여줄 곳’을 붙인 형식입니다. OOM은 뒤의 모의평가에서 더 자세히 연습합니다.
+
+1-1. 과제 소개
+
+발표문: “Linux 프로그램의 메모리 문제, CPU 과점유, 교착상태를 로그와 관제로 분석했습니다. 환경변수 변경 전후를 비교해 보고서로 정리했고, 직접 명령을 실행하며 실제 출력을 확인했습니다.”
+
+- 예상 질문: 단순히 앱을 실행한 것과 무엇이 다른가요?
+- 답변: 종료·정체라는 현상을 로그와 수치로 설명하고, 설정을 바꾼 뒤 결과를 비교했습니다.
+- 왜 이렇게 했는지: 재실행으로만 끝내면 원인이 남지 않으므로 증거를 보존하고 원인 판단을 남기기 위해서입니다.
+- 쉬운 설명: ‘고장났다’에서 끝내지 않고 ‘무슨 증거로 어떤 문제라고 봤는지’를 설명합니다.
+- 보여줄 곳: 이번 실습 README (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/README.md)의 보고서3건 요약. 이어서 monitor.sh (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/scripts/monitor.sh)의 ps·awk·sleep 반복문.
+
+1-2. OOM 현상과 종료 판단
+
+발표문: “RSS가 증가했고 앱이 Memory limit exceeded와 Self-terminating process를 기록했습니다. 종료 후 PID 부재까지 연결해 MemoryGuard 보호 종료로 판단했습니다.”
+
+- 예상 질문: 메모리 사용률이 올랐으니 무조건 메모리 때문에 종료된 것인가요?
+- 답변: 증가만으로는 확정하지 않았습니다. 한도 초과와 자체 종료를 기록한 두 로그를 함께 확인했습니다.
+- 왜 이렇게 했는지: 자원 증가라는 현상과 직접 종료 원인을 구분하기 위해서입니다.
+- 쉬운 설명: ‘많이 썼다’와 ‘그 때문에 보호 종료했다’는 다른 주장입니다.
+- 보여줄 곳: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 ‘메모리 상승 수치’ → ‘종료 직전 로그’. 필요하면 128MB 관제 CSV (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/monitor-11373.csv), 128MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/app.log).
+
+1-3. OOM 조치와 임시 조치의 의미
+
+발표문: “한도를128에서256MB로 높여 생존 시간이17.185초에서32.355초로 늘었습니다. 하지만 같은 종료가 반복돼 임시 조치였습니다.”
+
+- 예상 질문: 코드의 메모리 누수를 고친 것인가요?
+- 답변: 메모리가 증가하는 내부 코드는 고치지 않았고, 앱에 전달한 MEMORY_LIMIT 값만 바꿨습니다.
+- 왜 이렇게 했는지: 과제에서 요구한 한도 변경 효과를 비교했습니다. 원인 제거까지 한 것은 아닙니다.
+- 쉬운 설명: 물이 차는 이유는 그대로인데 멈추는 기준선만 높인 것입니다.
+- 보여줄 곳: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 비교 표와 ‘Workaround & Verification’.
+
+1-4. CPU Watchdog 종료
+
+발표문: “80설정에서는 임계치 위반과 Watchdog의 SIGTERM 종료 요청이 기록됐습니다.”
+
+- 예상 질문: Watchdog와 SIGTERM은 무엇인가요?
+- 답변: Watchdog는 상태를 감시해 보호 동작을 수행하는 장치이고 SIGTERM은 프로세스에 보내는 종료 요청입니다.
+- 왜 이렇게 했는지: 종료 코드만 보지 않고 종료를 요청한 정책을 로그로 확인했습니다.
+- 쉬운 설명: 감시자가 과점유로 판정하고 작업 종료를 요청한 상황입니다.
+- 보여줄 곳: CPU 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘Before: CPU 상승과 Watchdog 종료’. 원본은 CPU80 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-80-pty-20261110-194141/app.log).
+
+1-5. CPU 냉각과 생존 확인
+
+발표문: “40으로 바꾼 뒤 냉각 로그와86초 시점의 PID 유지·작업 진행을 확인했습니다.”
+
+- 예상 질문: PID가 있으니 무조건 정상이라고 본 것인가요?
+- 답변: PID 존재 외에도 부하가 내려가는 냉각 로그와 후속 작업 기록을 함께 확인했습니다.
+- 왜 이렇게 했는지: 프로세스가 살아 있어도 작업이 정체될 수 있기 때문입니다.
+- 쉬운 설명: 직원이 자리에 있는 것과 일을 계속 처리하는 것은 다릅니다.
+- 보여줄 곳: CPU 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘After: 냉각과 생존’, CPU40 생존 확인 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/ps-check.txt). ELAPSED86은 해당 프로세스 경과 초입니다.
+
+1-6. CPU70%와 수동 종료
+
+발표문: “top 최대는70%였으므로 전체CPU가40% 이하로 제한됐다고 설명하지 않았습니다. 변경 후 마지막 종료는 수동 정리였습니다.”
+
+- 예상 질문: 설정은40인데 왜70%가 나왔나요?
+- 답변: 앱 설정과 내부 지표, OS의 프로세스 전체 구간 사용률은 다릅니다. 정확한 작업별 기여도는 확인하지 못했습니다.
+- 왜 이렇게 했는지: 예상과 달라도 실제 측정값을 보존하고, 측정하지 않은 개선을 주장하지 않기 위해서입니다.
+- 쉬운 설명: 앱에 전달한 설정 숫자가 OS 도구의 모든 순간 사용률과 같은 것은 아닙니다.
+- 보여줄 곳: CPU 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/02-cpu.md)의 ‘예상과 달랐던70% 구간’, CPU40의70% 화면 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/top-high-frames.txt), CPU40 수동 정리 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/cpu-40-pty-20261110-194524/cleanup.log).
+- 추가 질문: 둘 다143이면 같은 종료 아닌가요?
+- 답변: CPU80은 Watchdog 로그가 있고 CPU40은 실험자의 manual SIGTERM 기록이 있어 종료 주체가 다릅니다.
+
+1-7. Deadlock의 순환 대기
+
+발표문: “true에서는 PID는 남았지만 로그와메모리가 정체됐습니다. 한 워커는A를 가진 채B를, 다른 워커는B를 가진 채A를 기다렸습니다.”
+
+- 예상 질문: 왜 둘 다 일을 끝낼 수 없나요?
+- 답변: 상대가 가진 자원이 필요한데 각자 가진 것을 놓지 않고 기다리는 순환 대기이기 때문입니다.
+- 왜 이렇게 했는지: 단순한 대기와 교착을 구분하기 위해 자원 보유·추가 요청·반복 관측의 정체를 함께 확인했습니다.
+- 쉬운 설명: 한 사람은 열쇠A를 가진 채B를, 다른 사람은B를 가진 채A를 기다리는 상황입니다.
+- 보여줄 곳: Deadlock 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 비교 표 → ‘마지막 로그의 자원 보유와 추가 요청’. 원본 true 스냅샷1 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-1.txt), true 스냅샷2 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-true-20261110-195228/snapshot-2.txt).
+
+1-8. Deadlock 회피
+
+발표문: “false에서는10초 사이 로그가661바이트 늘고 작업이 진행해 관측 구간에서 해당 교착 경로가 회피됐다고 판단했습니다.”
+
+- 예상 질문: false면 앱의 스레드가 하나가 된 건가요?
+- 답변: 아닙니다. 실제3개 스레드가 관측됐습니다. 전체 단일 스레드 전환으로 해석하지 않았습니다.
+- 왜 이렇게 했는지: 설정 이름으로 내부 구현을 단정하지 않고 실제 출력과 작업 진행으로 판단하기 위해서입니다.
+- 쉬운 설명: 멈추던 실행 경로를 피한 것이지 프로그램의 모든 스레드를 없앴다는 뜻은 아닙니다.
+- 보여줄 곳: Deadlock 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/03-deadlock.md)의 ‘After: 진행과 메모리 정리’, false 스냅샷1 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-1.txt), false 스냅샷2 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/deadlock-false-20261110-195628/snapshot-2.txt).
+- 추가 질문: 왜 메인에futex대기가 남았는데 회피라고 하나요?
+- 답변: 정상적인 동기화 대기도 가능하며 다른 워커의 작업과 로그가 진행했기 때문입니다.
+
+1-9. 마지막 정리와 한계
+
+발표문: “사용률이나PID 하나만으로 판단하지 않고 설정·관제·로그를 연결했습니다. 확인된 효과와 미확인 범위를 구분하고 원본 증거를 보존했습니다.”
+
+- 예상 질문: 무엇은 아직 확인하지 못했나요?
+- 답변: 정확한 누수 코드 위치, 작업별CPU기여도, 실제 서비스 응답시간 개선 등은 확인하지 못했습니다.
+- 왜 이렇게 했는지: 관측 사실과 추론, 추가 조사 필요 사항을 구분해야 동료가 결론을 정확하게 평가할 수 있기 때문입니다.
+- 쉬운 설명: 증거가 보여주는 만큼만 말하고 나머지는 미확인으로 남깁니다.
+- 보여줄 곳: 각 보고서의 ‘Root Cause Analysis’와 ‘Workaround & Verification’.
+
+2. OOM 실제 평가처럼 질문·답변 연습
+
+먼저 Q1~Q8을 읽고 표와 로그를 가리키며 말해보세요. Q9~Q16은 추가 질문 대비입니다.
+
+Q1. 무슨 과제이고 OOM에서는 무엇을 확인했나요?
+
+- 답변: Linux 프로그램의 장애를 로그와 관제로 분석하는 과제입니다. OOM 실험에서는 메모리 증가와 보호 종료를 확인하고 메모리 한도 변경 전후를 비교했습니다.
+- 왜 이렇게 했는지: 사용률 하나를 보고 원인을 단정하지 않고, 현상·종료 근거·변경 효과를 연결하려고 했습니다.
+- 쉬운 설명: ‘꺼졌다’는 결과에 그치지 않고 ‘무엇이 늘고 어떤 정책이 종료했는지’를 찾는 실험입니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Description과 비교 표.
+
+Q2. 무슨 설정을 바꿨고 나머지 값은 왜 유지했나요?
+
+- 답변: MEMORY_LIMIT만128에서256MB로 변경했습니다. CPU_MAX_OCCUPY=100과 MULTI_THREAD_ENABLE=false는 유지했습니다.
+- 왜 이렇게 했는지: 여러 조건을 동시에 바꾸면 어떤 변경이 결과에 영향을 줬는지 구분하기 어렵기 때문입니다.
+- 쉬운 설명: 물통의 높이 효과를 비교할 때 다른 조건은 같게 두는 것과 비슷합니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Description, 두 실행의 settings.txt.
+
+Q3. 메모리가 증가했다는 증거는 무엇인가요?
+
+- 답변: monitor.sh의 작업 자식 CSV에서 RSS가18,392에서146,412KiB로 증가했습니다. 256MB 실행의 관측 최대RSS는274,492KiB입니다.
+- 왜 이렇게 했는지: 앱의 설명뿐 아니라 OS가 관측한 상주량도 확인하려고 PID별로 기록했습니다.
+- 쉬운 설명: RSS 열을 세로로 따라가면 계단처럼 커집니다. 같은 값이 반복되는 구간도 정상적인 관측일 수 있습니다.
+- 참조: 128MB 관제 CSV (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/monitor-11373.csv)와 OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 메모리 상승 수치.
+
+Q4. MemoryGuard가 종료했다는 근거는 무엇인가요?
+
+- 답변: 앱이 Memory limit exceeded로 한도 초과를 기록하고 같은 PID에 Self-terminating process를 기록했습니다. 이후 대상 PID가 사라진 것도 확인했습니다.
+- 왜 이렇게 했는지: RSS 증가는 현상이고, 두 로그는 보호 조건과 종료 요청을 직접 설명하기 때문입니다.
+- 쉬운 설명: ‘기준을 넘었다 → 보호를 위해 종료한다 → 실제로 종료됐다’라는 연결입니다.
+- 참조: 128MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/app.log), 256MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-256-20261110-193915/app.log), OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 종료 직전 로그와 종료 후 ps.
+
+Q5. 128MB와256MB가 아니라 왜150MB와275MB에서 종료됐나요?
+
+- 답변: 앱 내부 값이25MB 단위로 증가했기 때문입니다. 128에서는125 다음150,256에서는250 다음275에서 한도를 넘었습니다.
+- 왜 이렇게 했는지: 기록된 증가 단계와 비교 조건을 함께 읽어야 출력의 숫자를 이해할 수 있습니다.
+- 쉬운 설명: 눈금이25씩인 상황에서128을 정확히 찍을 필요는 없습니다.
+- 참조: 128MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/app.log)와 256MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-256-20261110-193915/app.log)의 MemoryWorker·MemoryGuard 구간.
+
+Q6. 생존 시간은 어떻게 계산했고 얼마나 달라졌나요?
+
+- 답변: Agent listening 로그부터 MemoryGuard 종료 요청 로그까지 계산했습니다. 128MB는17.185초,256MB는32.355초로15.170초 늘었습니다.
+- 왜 이렇게 했는지: 폴더 생성 시각과 앱 시작은 다르기 때문에 두 실행 모두 같은 로그 기준을 사용했습니다.
+- 쉬운 설명: 19:36:36.661→19:36:53.846,19:39:40.578→19:40:12.933의 차이입니다. 표를 보고 읽어도 됩니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 비교 표, 128MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/app.log), 256MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-256-20261110-193915/app.log).
+
+Q7. 메모리 한도를 높였으니 근본 해결인가요?
+
+- 답변: 아닙니다. 메모리가 증가하는 내부 코드를 바꾸지 않고 보호 한도만 높였습니다. 더 오래 생존했지만 같은 종료가 반복돼 임시 조치였습니다.
+- 왜 이렇게 했는지: 변경이 실제로 원인을 없앴는지, 영향을 늦췄는지를 구분해야 합니다.
+- 쉬운 설명: 물이 계속 차는데 멈춤 기준선만 높인 것입니다. 물이 들어오는 원인을 고친 것은 아닙니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Workaround & Verification.
+
+Q8. 보고서를 한 문단으로 요약해보세요.
+
+- 답변: 메모리 사용량이 증가하다 종료됐고, RSS 증가와 MemoryGuard 한도 초과·자체 종료 로그로 원인을 판단했습니다. 한도를128에서256MB로 높이자15.170초 더 생존했지만 같은 종료가 반복돼 임시 조치로 정리했습니다.
+- 왜 이렇게 했는지: 현상 → 증거 → 원인 → 변경 결과 → 한계를 짧게 연결하는 답변입니다.
+- 쉬운 설명: 이 문단의 각 주장 옆에 보고서의 표·로그·결론을 차례로 가리키면 됩니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 비교 표 → 종료 로그 → 조치·검증 순서.
+
+Q9. RSS, Heap, Windows 메모리 사용률은 같은 것인가요?
+
+- 답변: 아닙니다. RSS는 OS가 보는 프로세스의 실제 RAM 상주량이고 Current Heap은 앱 내부 지표입니다. Windows 전체 메모리 사용률도 측정 범위가 다릅니다.
+- 왜 이렇게 했는지: 값의 범위·단위·시각이 다른데 같은 지표로 해석하면 종료 원인을 잘못 연결할 수 있습니다.
+- 쉬운 설명: ‘집 전체 사용량’, ‘한 방의 사용량’, ‘앱이 따로 세는 값’은 같은 숫자일 필요가 없습니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Root Cause Analysis, 128MB 관제 CSV (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/monitor-11373.csv).
+
+Q10. RSS가 앱 내부150MB와 정확히 같지 않은 이유는요?
+
+- 답변: 두 지표의 범위가 다르고,1초 간격 관제는 마지막 할당과 종료 사이를 놓칠 수 있습니다. 표의RSS는 관측 최대이지 종료 순간의 절대 최대는 아닙니다.
+- 왜 이렇게 했는지: 표본을 연속적인 모든 순간의 완전한 기록처럼 설명하지 않기 위해서입니다.
+- 쉬운 설명: 1초마다 사진을 찍으면 사진 사이의 짧은 순간은 빠질 수 있습니다.
+- 참조: 128MB 관제 CSV (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/monitor-11373.csv)의 마지막 시각과 128MB 앱 로그 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/app.log)의 종료 요청 시각.
+
+Q11. monitor.sh는 무엇을 하나요?
+
+- 답변: 지정한 PID를 ps로 약1초마다 조회하고 시각·CPU 평균·RSS·스레드 수·상태 등을 CSV로 저장합니다. 부모와 실제 작업 자식을 각각 기록했습니다.
+- 왜 이렇게 했는지: 실행기만 보면 작업 자식의 메모리 증가를 놓칠 수 있기 때문입니다.
+- 쉬운 설명: 실행 중인 작업의 상태를 같은 형식으로 반복 기록하는 관측 도구입니다.
+- 참조: monitor.sh (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/scripts/monitor.sh), 128MB 관제 CSV (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evidence/oom-128-20261110-193545/monitor-11373.csv).
+
+Q12. 스크립트의 ps, awk, sleep은 왜 사용했나요?
+
+- 답변: ps는 상태 조회, awk는 필요한 열을 쉼표로 정리하고 좀비 행을 제외하는 처리, sleep은 다음 조회 전1초 대기입니다.
+- 왜 이렇게 했는지: 수집값의 열과 간격을 일정하게 만들어 시간에 따른 변화를 비교하기 위해서입니다.
+- 쉬운 설명: ps가 측정표를 가져오고 awk가 표를 정리하며 sleep이 다음 측정까지 기다리는 역할입니다.
+- 참조: monitor.sh (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/scripts/monitor.sh)의 while 반복문.
+
+Q13. 종료 코드137이면 커널 OOM Killer가 종료한 것인가요?
+
+- 답변: 137은 Bash의128+시그널 번호 규칙에서SIGKILL(9) 해석과 일치합니다. 하지만 숫자만으로 종료 주체를 알 수 없습니다. 이번에는 MemoryGuard 로그로 앱의 보호 종료를 판단했습니다.
+- 왜 이렇게 했는지: 같은 시그널 상태가 서로 다른 상황에서 나올 수 있으므로 원인 로그와 대조해야 합니다.
+- 쉬운 설명: 종료 코드는 ‘어떤 종료 상태인지’의 단서이고, ‘누가 왜 종료했는지’는 추가 증거가 필요합니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Root Cause Analysis와 두 실행의 exit-code.txt.
+
+Q14. 메모리 누수의 정확한 코드 위치도 찾았나요?
+
+- 답변: 아니요. 관측 기간에 메모리 누적과 보호 종료는 확인했지만, 비공개 바이너리의 특정 자료구조나 해제 누락 위치는 확정하지 않았습니다.
+- 왜 이렇게 했는지: 허용된 로그·시스템 도구 분석의 범위와 내부 소스 분석을 구분하기 위해서입니다.
+- 쉬운 설명: 증상과 직접 종료 원인은 알았지만 내부의 어느 줄이 원인인지는 별도 조사입니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Root Cause Analysis 중 추론과 한계.
+
+Q15. 힙·스택은 무엇이며 메모리 증가가 시스템에 어떤 영향을 주나요?
+
+- 답변: 힙은 동적으로 사용하는 메모리 영역이고 스택은 함수 호출·지역 상태 등을 관리하는 영역입니다. 메모리 누적이 계속되면 다른 작업의 RAM 여유가 줄고 페이지 회수·스왑 등으로 지연이 생길 수 있습니다.
+- 왜 이렇게 했는지: 프로그램의 동작을 OS의 자원 관리와 연결해 설명하는 과제이기 때문입니다.
+- 쉬운 설명: 앱 하나가 공간을 계속 차지하면 다른 작업이 사용할 여유도 줄어들 수 있습니다. 다만 이번에 시스템 전체RAM이 소진됐다고 측정한 것은 아닙니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 OS 동작 원리 부분.
+
+Q16. 그렇다면 근본적으로 무엇을 더 해야 하나요?
+
+- 답변: 소스 접근이 가능한 개발자가 데이터 보관량, 캐시 만료·회수, 참조 유지와 할당 위치를 분석하고 수정 후 같은 조건으로 다시 검증해야 합니다.
+- 왜 이렇게 했는지: 한도 상향과 달리 불필요한 누적의 원인을 줄이거나 없애는 조치가 필요하기 때문입니다.
+- 쉬운 설명: 물통의 기준선만 높이는 대신 불필요하게 계속 쌓이는 이유를 찾아 고치는 단계입니다.
+- 참조: OOM 보고서 (https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/reports/01-oom.md)의 Workaround & Verification 추가 제안.
+
+3. 최종 확인
+
+- 필수 산출물은 갖춰졌습니다. 평가 합격이나 점수는 평가자가 판단합니다.
+- 제출할 저장소와 폴더는 bidulgiya999/codyssey_work_B4-2의 plus_2026_11_10입니다.
+- 코드·절차에 도움을 받았다는 사실을 숨기지 않고, 직접 실행·관측한 내용과 구분합니다.
+- 이번 수치와 기존10월9일 보고서 수치를 섞지 않습니다.
+- 모르면 “이번 자료로는 확인하지 못했습니다. 확인한 근거는 여기까지입니다”라고 답합니다.
+- 최종 제출 버튼·링크·기한 등 학교의 별도 절차가 남아 있는지는 확인합니다.
