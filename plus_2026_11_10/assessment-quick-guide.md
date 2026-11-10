@@ -1,5 +1,7 @@
 # 평가 때 화면을 보며 설명하는 순서
 
+[평가 발표 최종 메모: 열 파일·말할 문장·예상 답변](evaluation-final-memo.md) · [메모장용 최종 메모](evaluation-final-memo.txt)
+
 평가자가 보는 항목별 답변과 운영 응용 질문은 [평가 항목1~4·개념 해설](evaluation-rubric-guide.md)을 확인하세요. 장애별 예상 질문은 [총48개 질문·답변](evaluation-qa.md)에 있습니다.
 
 문장 아래에 답변과 이유를 붙여 연습하려면 [발표 메모·OOM·CPU·Deadlock 질문답변](evaluation-qa.md)을 함께 읽으세요. [메모장용 파일](evaluation-qa.txt)도 제공합니다.
