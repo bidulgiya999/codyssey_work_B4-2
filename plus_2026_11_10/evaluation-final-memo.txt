@@ -7,6 +7,11 @@ https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/eva
 https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evaluation-qa.md · 평가 항목 1~4와 용어 해설
 https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/evaluation-rubric-guide.md
 
+새로 보강한 학습 자료: README 발표 순서도와 가리킬 부분
+https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/README.md#presentation · 클릭해서 읽는 용어집
+https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/glossary.md · monitor.sh 전체 코드 해설
+https://github.com/bidulgiya999/codyssey_work_B4-2/blob/main/plus_2026_11_10/monitor-code-guide.md. 보고서 01·02·03의 실행 코드 아래는 “코드 해석”, 출력 아래는 “출력 해석”으로 구분했습니다. 원본 링크의 관찰 항목은 각 보고서의 증거 안내 표를 참고합니다.
+
 1. 발표 화면을 여는 순서
 
 1. 이번 실습 README

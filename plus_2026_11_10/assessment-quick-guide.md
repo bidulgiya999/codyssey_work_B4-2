@@ -1,5 +1,7 @@
 # 평가 때 화면을 보며 설명하는 순서
 
+[README 발표 순서도·화면별 말할 문장](README.md#presentation) · [용어집](glossary.md) · [monitor.sh 코드 해설](monitor-code-guide.md)을 함께 확인하세요. 보고서마다 코드 해석, 출력 해석, 원본 링크를 열어 볼 항목을 보강했습니다.
+
 [평가 발표 최종 메모: 열 파일·말할 문장·예상 답변](evaluation-final-memo.md) · [메모장용 최종 메모](evaluation-final-memo.txt)
 
 평가자가 보는 항목별 답변과 운영 응용 질문은 [평가 항목1~4·개념 해설](evaluation-rubric-guide.md)을 확인하세요. 장애별 예상 질문은 [총48개 질문·답변](evaluation-qa.md)에 있습니다.

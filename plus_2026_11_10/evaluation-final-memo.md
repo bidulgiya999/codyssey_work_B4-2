@@ -4,6 +4,8 @@
 
 [메모장용 파일](evaluation-final-memo.txt) · [장애별 질문 48개](evaluation-qa.md) · [평가 항목 1~4와 용어 해설](evaluation-rubric-guide.md)
 
+새로 보강한 학습 자료: [README 발표 순서도와 가리킬 부분](README.md#presentation) · [클릭해서 읽는 용어집](glossary.md) · [monitor.sh 전체 코드 해설](monitor-code-guide.md). 보고서 01·02·03의 실행 코드 아래는 “코드 해석”, 출력 아래는 “출력 해석”으로 구분했습니다. 원본 링크의 관찰 항목은 각 보고서의 증거 안내 표를 참고합니다.
+
 ## 1. 발표 화면을 여는 순서
 
 1. [이번 실습 README](README.md): 과제 목적과 여섯 실행을 소개합니다.
